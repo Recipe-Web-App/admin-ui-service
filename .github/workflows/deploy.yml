@@ -1,0 +1,90 @@
+name: Deploy Admin UI
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run linter
+        run: npm run lint
+        
+      - name: Run unit tests
+        run: npm run test -- --coverage --watch=false
+        
+      - name: Run E2E tests
+        run: npm run test:e2e
+        
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build SSR application
+        run: npm run build:ssr
+        
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: |
+            dist/
+            package.json
+            package-lock.json
+          retention-days: 30
+          
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+          
+      - name: Deploy to production
+        run: |
+          echo "🚀 Deploy to production server"
+          echo "This step would typically:"
+          echo "- Copy files to production server"
+          echo "- Update CDN with static assets"
+          echo "- Restart SSR server"
+          echo "- Run health checks"
+          echo "- Notify team of deployment"
+          
+      - name: Health check
+        run: |
+          echo "🏥 Running health checks"
+          echo "Verify application is responding correctly"
+          
+      - name: Notify deployment
+        if: always()
+        run: |
+          echo "📢 Deployment completed for commit ${{ github.sha }}"

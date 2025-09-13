@@ -72,6 +72,7 @@ logs/
 *.temp
 .tmp/
 .temp/
+tmp/
 
 # Build artifacts
 dist-ssr/
