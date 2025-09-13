@@ -69,7 +69,7 @@ jobs:
           npm run analyze
 
       - name: Comment bundle size
-        uses: actions/github-script@v6
+        uses: actions/github-script@v8
         if: github.event_name == 'pull_request'
         with:
           script: |
