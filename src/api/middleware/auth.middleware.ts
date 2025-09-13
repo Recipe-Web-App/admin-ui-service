@@ -7,6 +7,16 @@ import { NextFunction, Request, Response } from 'express';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 import { UserInfo, JWTPayload } from '../types/api.types';
 import { ErrorResponses } from '../utils/response.util';
+import {
+  getAuthConfig,
+  getClientId,
+  isOAuth2Enabled,
+  isIntrospectionEnabled,
+  getJWTSecret,
+  getClientSecret,
+  getDiscoveryUrl,
+  getIntrospectionUrl,
+} from '../../config/auth.config';
 
 // Extend Express Request for TypeScript
 declare module 'express-serve-static-core' {
@@ -15,35 +25,132 @@ declare module 'express-serve-static-core' {
   }
 }
 
-// Cache JWKS for performance
+// Cache JWKS and discovery for performance
 let jwksCache: ReturnType<typeof createRemoteJWKSet> | null = null;
+let discoveryCache: Record<string, unknown> | null = null;
 
 /**
- * Initialize JWKS from OAuth2 issuer
+ * Get OAuth2 discovery metadata
  */
-function getJWKS() {
+async function getDiscoveryMetadata(): Promise<Record<string, unknown>> {
+  if (!discoveryCache) {
+    const discoveryUrl = getDiscoveryUrl();
+
+    try {
+      const response = await fetch(discoveryUrl);
+      if (!response.ok) {
+        throw new Error(`Discovery failed: ${response.status}`);
+      }
+      discoveryCache = await response.json();
+    } catch (error) {
+      console.error('OAuth2 discovery failed, falling back to default JWKS:', error);
+      // Fallback to standard JWKS endpoint
+      const config = getAuthConfig();
+      discoveryCache = {
+        jwks_uri: `${config.issuer}/.well-known/jwks.json`,
+      };
+    }
+  }
+  return discoveryCache as Record<string, unknown>;
+}
+
+/**
+ * Initialize JWKS from OAuth2 discovery
+ */
+async function getJWKS() {
   if (!jwksCache) {
-    const issuer = process.env['AUTH_ISSUER'] || 'http://localhost:8080/auth';
-    const jwksUri = new URL('/.well-known/jwks.json', issuer);
+    const discovery = await getDiscoveryMetadata();
+    const jwksUriPath = (discovery['jwks_uri'] as string) || '/.well-known/jwks.json';
+    const jwksUri = new URL(jwksUriPath, getAuthConfig().issuer);
     jwksCache = createRemoteJWKSet(jwksUri);
   }
   return jwksCache;
 }
 
 /**
- * Validate OAuth2 access token
+ * Validate token via OAuth2 introspection endpoint
  */
-async function validateOAuth2Token(token: string): Promise<UserInfo | null> {
+async function validateViaIntrospection(token: string): Promise<UserInfo | null> {
   try {
-    const issuer = process.env['AUTH_ISSUER'] || 'http://localhost:8080/auth';
-    const clientId = process.env['AUTH_CLIENT_ID'] || 'admin-ui-client';
-    const JWKS = getJWKS();
+    const clientId = getClientId();
+    const clientSecret = getClientSecret();
 
-    // Verify JWT token
-    const { payload } = await jwtVerify(token, JWKS, {
-      issuer,
-      audience: clientId,
+    if (!clientSecret) {
+      console.error('OAuth2 client secret not configured for introspection');
+      return null;
+    }
+
+    const introspectionEndpoint = getIntrospectionUrl();
+
+    const response = await fetch(introspectionEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`,
+      },
+      body: new URLSearchParams({
+        token,
+        token_type_hint: 'access_token',
+      }),
     });
+
+    const result = await response.json();
+
+    if (!result.active) {
+      return null;
+    }
+
+    // Extract user information from introspection response
+    const user: UserInfo = {
+      id: result.sub || 'unknown',
+      email: result.email || '',
+      name: result.name || result.preferred_username || '',
+      roles: result.realm_access?.roles || [],
+      permissions: result.resource_access?.[clientId]?.roles || [],
+      lastLogin: new Date().toISOString(),
+    };
+
+    return user;
+  } catch (error) {
+    console.error('Token introspection error:', error);
+    return null;
+  }
+}
+
+/**
+ * Validate token via local JWT verification
+ */
+async function validateViaLocalJWT(token: string): Promise<UserInfo | null> {
+  try {
+    const authConfig = getAuthConfig();
+    const clientId = getClientId();
+    const jwtSecret = getJWTSecret();
+
+    if (!jwtSecret) {
+      console.error('JWT secret not configured for local validation');
+      return null;
+    }
+
+    let payload;
+
+    try {
+      // Try JWKS first (for RS256 tokens)
+      const JWKS = await getJWKS();
+      const result = await jwtVerify(token, JWKS, {
+        issuer: authConfig.issuer,
+        audience: clientId,
+      });
+      payload = result.payload;
+    } catch (error) {
+      console.warn('JWKS verification failed, trying HMAC secret for HS256:', error);
+      // Fallback to HMAC (HS256) with secret
+      const secretKey = new TextEncoder().encode(jwtSecret);
+      const result = await jwtVerify(token, secretKey, {
+        issuer: authConfig.issuer,
+        audience: clientId,
+      });
+      payload = result.payload;
+    }
 
     // Extract user information from token claims
     const typedPayload = payload as unknown as JWTPayload;
@@ -58,8 +165,26 @@ async function validateOAuth2Token(token: string): Promise<UserInfo | null> {
 
     return user;
   } catch (error) {
-    console.error('OAuth2 token validation error:', error);
+    console.error('Local JWT validation error:', error);
     return null;
+  }
+}
+
+/**
+ * Main token validation function - uses configured validation mode
+ */
+async function validateToken(token: string): Promise<UserInfo | null> {
+  // Check if OAuth2 service is enabled
+  if (!isOAuth2Enabled()) {
+    console.debug('OAuth2 service is disabled');
+    return null;
+  }
+
+  // Use introspection or local JWT validation based on configuration
+  if (isIntrospectionEnabled()) {
+    return await validateViaIntrospection(token);
+  } else {
+    return await validateViaLocalJWT(token);
   }
 }
 
@@ -82,7 +207,7 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
   }
 
   try {
-    const user = await validateOAuth2Token(token);
+    const user = await validateToken(token);
 
     if (!user) {
       ErrorResponses.unauthorized(res, 'Invalid or expired token');
@@ -118,7 +243,7 @@ export async function optionalAuth(req: Request, res: Response, next: NextFuncti
 
   if (bearer === 'Bearer' && token) {
     try {
-      const user = await validateOAuth2Token(token);
+      const user = await validateToken(token);
 
       if (user) {
         req.user = user;
@@ -184,25 +309,10 @@ export function requireRole(...requiredRoles: string[]) {
  * Validate token endpoint for OAuth2 introspection
  */
 export async function introspectToken(token: string): Promise<boolean> {
-  try {
-    const issuer = process.env['AUTH_ISSUER'] || 'http://localhost:8080/auth';
-    const introspectionEndpoint = `${issuer}/protocol/openid-connect/token/introspect`;
-
-    const response = await fetch(introspectionEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        token,
-        client_id: process.env['AUTH_CLIENT_ID'] || 'admin-ui-client',
-      }),
-    });
-
-    const result = await response.json();
-    return result.active === true;
-  } catch (error) {
-    console.error('Token introspection error:', error);
+  if (!isOAuth2Enabled() || !isIntrospectionEnabled()) {
     return false;
   }
+
+  const user = await validateViaIntrospection(token);
+  return user !== null;
 }

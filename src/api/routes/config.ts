@@ -7,6 +7,7 @@ import { Router, Request, Response } from 'express';
 import { sendSuccess } from '../utils/response.util';
 import { AppConfig, FeatureFlags } from '../types/api.types';
 import { optionalAuth } from '../middleware/auth.middleware';
+import { getAuthConfig, getClientId } from '../../config/auth.config';
 
 const router = Router();
 
@@ -15,10 +16,12 @@ const router = Router();
  * Get client configuration
  */
 router.get('/config', optionalAuth, (req: Request, res: Response) => {
+  const authConfig = getAuthConfig();
+
   const config: AppConfig = {
     apiUrl: process.env['API_URL'] || 'http://localhost:8080/api',
-    authIssuer: process.env['AUTH_ISSUER'] || 'http://localhost:8080/auth',
-    authClientId: process.env['AUTH_CLIENT_ID'] || 'admin-ui-client',
+    authIssuer: authConfig.issuer,
+    authClientId: getClientId(),
     features: {
       enableAnalytics: process.env['ENABLE_ANALYTICS'] === 'true',
       enableRealTimeUpdates: process.env['ENABLE_REAL_TIME_UPDATES'] === 'true',
@@ -77,7 +80,7 @@ router.get('/environment', (req: Request, res: Response) => {
     node: process.version,
     platform: process.platform,
     apiUrl: process.env['API_URL'],
-    authIssuer: process.env['AUTH_ISSUER'],
+    authIssuer: getAuthConfig().issuer,
   };
 
   return sendSuccess(res, envInfo);
