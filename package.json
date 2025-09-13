@@ -1,6 +1,30 @@
 {
   "name": "admin-ui-service",
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Angular 20 admin dashboard for recipe management with SSR support",
+  "keywords": [
+    "angular",
+    "admin",
+    "dashboard",
+    "recipe",
+    "ssr",
+    "primeng",
+    "tailwindcss"
+  ],
+  "author": "Recipe Web App Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Recipe-Web-App/admin-ui-service.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Recipe-Web-App/admin-ui-service/issues"
+  },
+  "homepage": "https://github.com/Recipe-Web-App/admin-ui-service",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=11.0.0"
+  },
   "scripts": {
     "ng": "ng",
     "dev": "ng serve --hmr",
