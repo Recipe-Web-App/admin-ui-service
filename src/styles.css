@@ -1,1 +1,97 @@
-/* You can add global styles to this file, and also import other style files */
+/* Import statements must come first */
+@import 'primeicons/primeicons.css';
+
+/* TailwindCSS imports */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS Variables for PrimeNG Theme Integration */
+:root {
+  /* Primary Colors - synced with Tailwind */
+  --p-primary-50: theme('colors.primary.50');
+  --p-primary-100: theme('colors.primary.100');
+  --p-primary-200: theme('colors.primary.200');
+  --p-primary-300: theme('colors.primary.300');
+  --p-primary-400: theme('colors.primary.400');
+  --p-primary-500: theme('colors.primary.500');
+  --p-primary-600: theme('colors.primary.600');
+  --p-primary-700: theme('colors.primary.700');
+  --p-primary-800: theme('colors.primary.800');
+  --p-primary-900: theme('colors.primary.900');
+  
+  /* Surface Colors - synced with Tailwind */
+  --p-surface-0: theme('colors.surface.0');
+  --p-surface-50: theme('colors.surface.50');
+  --p-surface-100: theme('colors.surface.100');
+  --p-surface-200: theme('colors.surface.200');
+  --p-surface-300: theme('colors.surface.300');
+  --p-surface-400: theme('colors.surface.400');
+  --p-surface-500: theme('colors.surface.500');
+  --p-surface-600: theme('colors.surface.600');
+  --p-surface-700: theme('colors.surface.700');
+  --p-surface-800: theme('colors.surface.800');
+  --p-surface-900: theme('colors.surface.900');
+  
+  /* Content Colors */
+  --p-text-color: theme('colors.surface.700');
+  --p-text-muted-color: theme('colors.surface.500');
+  --p-text-hover-color: theme('colors.surface.800');
+  
+  /* Component Spacing */
+  --p-content-padding: theme('spacing.6');
+  --p-component-padding: theme('spacing.4');
+  
+  /* Borders and Radius */
+  --p-border-radius: theme('borderRadius.lg');
+  --p-border-color: theme('colors.surface.200');
+  --p-hover-color: theme('colors.surface.50');
+  
+  /* Focus and States */
+  --p-focus-ring-color: theme('colors.primary.500');
+  --p-focus-ring-offset: 2px;
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] {
+  --p-surface-0: theme('colors.surface.900');
+  --p-surface-50: theme('colors.surface.800');
+  --p-surface-100: theme('colors.surface.700');
+  --p-surface-200: theme('colors.surface.600');
+  --p-text-color: theme('colors.surface.200');
+  --p-text-muted-color: theme('colors.surface.400');
+  --p-text-hover-color: theme('colors.surface.100');
+  --p-border-color: theme('colors.surface.700');
+  --p-hover-color: theme('colors.surface.800');
+}
+
+/* Global Styles */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: theme('fontFamily.sans');
+}
+
+body {
+  @apply bg-surface-50 text-surface-700 dark:bg-surface-900 dark:text-surface-200;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Custom component styles */
+@layer components {
+  .card {
+    @apply bg-white dark:bg-surface-800 rounded-xl shadow-lg border border-surface-200 dark:border-surface-700 p-6;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-surface-200 hover:bg-surface-300 text-surface-700 px-4 py-2 rounded-lg font-medium transition-colors;
+  }
+}
