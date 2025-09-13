@@ -8,16 +8,16 @@ export const environment = {
     responseType: 'code',
     usePkce: true,
     requireHttps: true,
-    strictDiscoveryDocumentValidation: false
+    strictDiscoveryDocumentValidation: false,
   },
   features: {
     analytics: true,
     realTimeUpdates: true,
     offlineMode: true,
-    darkMode: true
+    darkMode: true,
   },
   monitoring: {
     sentryDsn: 'your-sentry-dsn',
-    logLevel: 'error' as const
-  }
+    logLevel: 'error' as const,
+  },
 };

@@ -35,9 +35,7 @@ export class AppStateService {
   // Computed values
   isAuthenticated = computed(() => !!this.user());
   isDarkMode = computed(() => this.theme() === 'dark');
-  unreadNotifications = computed(() => 
-    this.notifications().filter(n => !n.read)
-  );
+  unreadNotifications = computed(() => this.notifications().filter((n) => !n.read));
   unreadCount = computed(() => this.unreadNotifications().length);
 
   // Actions
@@ -61,27 +59,23 @@ export class AppStateService {
       ...notification,
       id: this.generateId(),
       timestamp: new Date(),
-      read: false
+      read: false,
     };
-    this._notifications.update(notifications => [...notifications, newNotification]);
+    this._notifications.update((notifications) => [...notifications, newNotification]);
   };
 
   removeNotification = (id: string) => {
-    this._notifications.update(notifications => 
-      notifications.filter(n => n.id !== id)
-    );
+    this._notifications.update((notifications) => notifications.filter((n) => n.id !== id));
   };
 
   markNotificationRead = (id: string) => {
-    this._notifications.update(notifications =>
-      notifications.map(n => n.id === id ? { ...n, read: true } : n)
+    this._notifications.update((notifications) =>
+      notifications.map((n) => (n.id === id ? { ...n, read: true } : n)),
     );
   };
 
   markAllNotificationsRead = () => {
-    this._notifications.update(notifications =>
-      notifications.map(n => ({ ...n, read: true }))
-    );
+    this._notifications.update((notifications) => notifications.map((n) => ({ ...n, read: true })));
   };
 
   setLoading = (loading: boolean) => {
@@ -89,7 +83,7 @@ export class AppStateService {
   };
 
   toggleSidebar = () => {
-    this._sidebarCollapsed.update(collapsed => !collapsed);
+    this._sidebarCollapsed.update((collapsed) => !collapsed);
   };
 
   setSidebarCollapsed = (collapsed: boolean) => {

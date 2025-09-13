@@ -1,15 +1,18 @@
 # Recipe Web App - Admin UI Service Technical Specification
 
-> **Version**: 1.0  
-> **Date**: September 2025  
+> **Version**: 1.0
+> **Date**: September 2025
 > **Tech Stack**: Angular 20 + Latest 2025 Technologies
 
 ## 1. Project Overview
 
 ### Description
-Modern Angular 20 server-side rendered admin dashboard for comprehensive recipe web application management with cutting-edge 2025 web technologies.
+
+Modern Angular 20 server-side rendered admin dashboard for comprehensive recipe web application management
+with cutting-edge 2025 web technologies.
 
 ### Technical Goals
+
 - **High-performance SSR** with Angular Universal + Vite integration
 - **Beautiful, responsive admin interface** using PrimeNG + TailwindCSS 4.x
 - **Real-time data management** with signal-based reactivity
@@ -17,8 +20,9 @@ Modern Angular 20 server-side rendered admin dashboard for comprehensive recipe 
 - **Developer-optimized** with latest tooling and testing infrastructure
 
 ### Out of Scope
+
 - Public recipe website (separate service)
-- Mobile native applications  
+- Mobile native applications
 - Real-time messaging/chat features
 - Payment processing systems
 - External recipe API integrations (future phase)
@@ -26,37 +30,43 @@ Modern Angular 20 server-side rendered admin dashboard for comprehensive recipe 
 ## 2. Tech Stack - September 2025 Latest
 
 ### Core Framework
+
 - **Angular 20.x** - Latest with enhanced signals and hydration
 - **Angular Universal** - SSR with streaming and improved hydration
 - **Vite 7.x** - Primary build tool (now fully integrated in Angular 20)
 - **TypeScript 6.0.x** - Latest language features and performance improvements
 
 ### UI & Design System
+
 - **PrimeNG 19.x** - Angular 20 compatible admin components
 - **TailwindCSS 4.2.x** - Stable v4 with native CSS and enhanced performance
 - **Lucide Angular 3.x** - Modern icon system with Angular 20 support
 - **Angular Material 20.x** - Selective use for specific components
 - **Angular Animations v20** - Enhanced performance and new animation APIs
 
-### State Management & Reactivity  
+### State Management & Reactivity
+
 - **Angular Signals v20** - Mature signal system with computed optimizations
 - **TanStack Query v6.x** - Latest server state with Angular 20 integration
 - **RxJS 8.2.x** - Stable with improved tree-shaking and performance
 - **Zod 4.1.x** - Major v4 with enhanced TypeScript inference
 
 ### Forms & Validation
+
 - **Angular Reactive Forms v20** - Full signal integration
 - **Angular Model-driven architecture** - New patterns in v20
 - **Zod + Angular Forms** - Type-safe validation integration
 - **Custom form components** - Reusable PrimeNG + validation wrappers
 
 ### Authentication & Security
+
 - **angular-oauth2-oidc 20.x** - Latest with Angular 20 compatibility
 - **PKCE + Refresh Token** - Modern OAuth2 flow
 - **Angular Guards v20** - Enhanced functional guards with improved DI
 - **JWT handling** - Secure token management and validation
 
 ### Testing Stack
+
 - **Vitest 3.x** - Major update with native Angular 20 integration
 - **Angular Testing Library 20.x** - Signal-aware testing utilities
 - **Playwright 2.2.x** - Latest E2E with improved debugging and trace viewer
@@ -64,6 +74,7 @@ Modern Angular 20 server-side rendered admin dashboard for comprehensive recipe 
 - **Chromatic** - Visual regression testing for components
 
 ### Build & Development Tools
+
 - **Angular CLI 20.x** - Vite-based builds with faster HMR
 - **ESLint 10.x** - Latest with Angular 20 rules and improved performance
 - **Prettier 4.x** - Major release with enhanced formatting
@@ -73,7 +84,8 @@ Modern Angular 20 server-side rendered admin dashboard for comprehensive recipe 
 ## 3. Architecture & Design
 
 ### Application Structure
-```
+
+```text
 admin-ui-service/
 ├── src/
 │   ├── app/
@@ -110,6 +122,7 @@ admin-ui-service/
 ```
 
 ### Component Architecture Pattern
+
 ```typescript
 // Modern Angular 20 Signal-Based Component
 @Component({
@@ -118,13 +131,13 @@ admin-ui-service/
   imports: [CommonModule, TableModule, ButtonModule],
   template: `
     <div class="p-6 bg-white rounded-xl shadow-lg">
-      <p-table 
-        [value]="recipes()" 
+      <p-table
+        [value]="recipes()"
         [loading]="isLoading()"
         [paginator]="true"
         [rows]="20"
-        class="w-full">
-        
+        class="w-full"
+      >
         <ng-template pTemplate="header">
           <tr>
             <th class="text-left font-semibold">Name</th>
@@ -132,51 +145,51 @@ admin-ui-service/
             <th class="text-left font-semibold">Actions</th>
           </tr>
         </ng-template>
-        
+
         <ng-template pTemplate="body" let-recipe>
           <tr class="hover:bg-slate-50 transition-colors">
             <td>{{ recipe.name }}</td>
             <td>{{ recipe.category }}</td>
             <td>
-              <button 
-                pButton 
+              <button
+                pButton
                 icon="pi pi-pencil"
                 class="p-button-text p-button-sm"
-                (click)="editRecipe(recipe)">
-              </button>
+                (click)="editRecipe(recipe)"
+              ></button>
             </td>
           </tr>
         </ng-template>
       </p-table>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeListComponent {
   // Signal-based state management
   private recipeService = inject(RecipeService);
   private router = inject(Router);
-  
+
   // Reactive queries with TanStack Query
   recipesQuery = injectQuery(() => ({
     queryKey: ['recipes', this.filters()],
     queryFn: () => this.recipeService.getRecipes(this.filters()),
-    staleTime: 5 * 60 * 1000 // 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes
   }));
-  
+
   // Computed values
   recipes = computed(() => this.recipesQuery.data() ?? []);
   isLoading = computed(() => this.recipesQuery.isLoading());
   error = computed(() => this.recipesQuery.error());
-  
+
   // Local state
   filters = signal<RecipeFilters>({});
-  
+
   // Actions
   editRecipe = (recipe: Recipe) => {
     this.router.navigate(['/recipes', recipe.id, 'edit']);
   };
-  
+
   updateFilters = (newFilters: RecipeFilters) => {
     this.filters.set(newFilters);
   };
@@ -184,6 +197,7 @@ export class RecipeListComponent {
 ```
 
 ### State Management Architecture
+
 ```typescript
 // Global App State Service
 @Injectable({ providedIn: 'root' })
@@ -191,76 +205,72 @@ export class AppStateService {
   private _user = signal<User | null>(null);
   private _theme = signal<'light' | 'dark'>('light');
   private _notifications = signal<Notification[]>([]);
-  
+
   // Read-only computed signals
   user = this._user.asReadonly();
   theme = this._theme.asReadonly();
   notifications = this._notifications.asReadonly();
   isAuthenticated = computed(() => !!this.user());
   isDarkMode = computed(() => this.theme() === 'dark');
-  
+
   // Actions
   setUser = (user: User | null) => this._user.set(user);
-  toggleTheme = () => this._theme.update(t => t === 'light' ? 'dark' : 'light');
+  toggleTheme = () => this._theme.update((t) => (t === 'light' ? 'dark' : 'light'));
   addNotification = (notification: Notification) => {
-    this._notifications.update(notifications => [...notifications, notification]);
+    this._notifications.update((notifications) => [...notifications, notification]);
   };
   removeNotification = (id: string) => {
-    this._notifications.update(notifications => 
-      notifications.filter(n => n.id !== id)
-    );
+    this._notifications.update((notifications) => notifications.filter((n) => n.id !== id));
   };
 }
 ```
 
 ### API Integration Pattern
+
 ```typescript
 // Modern HTTP Service with Signals
 @Injectable({ providedIn: 'root' })
 export class RecipeApiService {
   private http = inject(HttpClient);
   private baseUrl = '/api/recipes';
-  
+
   getRecipes = (filters?: RecipeFilters) => {
     const params = new HttpParams({ fromObject: filters });
     return this.http.get<Recipe[]>(this.baseUrl, { params });
   };
-  
-  getRecipe = (id: string) => 
-    this.http.get<Recipe>(`${this.baseUrl}/${id}`);
-  
-  createRecipe = (recipe: CreateRecipeDto) =>
-    this.http.post<Recipe>(this.baseUrl, recipe);
-  
+
+  getRecipe = (id: string) => this.http.get<Recipe>(`${this.baseUrl}/${id}`);
+
+  createRecipe = (recipe: CreateRecipeDto) => this.http.post<Recipe>(this.baseUrl, recipe);
+
   updateRecipe = (id: string, recipe: UpdateRecipeDto) =>
     this.http.put<Recipe>(`${this.baseUrl}/${id}`, recipe);
-  
-  deleteRecipe = (id: string) =>
-    this.http.delete<void>(`${this.baseUrl}/${id}`);
+
+  deleteRecipe = (id: string) => this.http.delete<void>(`${this.baseUrl}/${id}`);
 }
 
 // TanStack Query Integration
-export const useRecipesQuery = (filters = signal<RecipeFilters>({})) => 
+export const useRecipesQuery = (filters = signal<RecipeFilters>({})) =>
   injectQuery(() => ({
     queryKey: ['recipes', filters()],
     queryFn: () => inject(RecipeApiService).getRecipes(filters()),
-    staleTime: 5 * 60 * 1000
+    staleTime: 5 * 60 * 1000,
   }));
 
-export const useRecipeMutation = () => 
+export const useRecipeMutation = () =>
   injectMutation(() => ({
-    mutationFn: (data: CreateRecipeDto) => 
-      inject(RecipeApiService).createRecipe(data),
+    mutationFn: (data: CreateRecipeDto) => inject(RecipeApiService).createRecipe(data),
     onSuccess: () => {
       // Invalidate and refetch recipes
       inject(QueryClient).invalidateQueries({ queryKey: ['recipes'] });
-    }
+    },
   }));
 ```
 
 ## 4. Styling Integration
 
 ### TailwindCSS + PrimeNG Integration
+
 ```css
 /* Custom CSS Variables for PrimeNG Theme */
 :root {
@@ -270,28 +280,28 @@ export const useRecipeMutation = () =>
   --p-primary-500: theme('colors.blue.500');
   --p-primary-600: theme('colors.blue.600');
   --p-primary-700: theme('colors.blue.700');
-  
+
   /* Surface Colors */
   --p-surface-0: theme('colors.white');
   --p-surface-50: theme('colors.slate.50');
   --p-surface-100: theme('colors.slate.100');
   --p-surface-200: theme('colors.slate.200');
-  
+
   /* Content */
   --p-text-color: theme('colors.slate.700');
   --p-text-muted-color: theme('colors.slate.500');
-  
+
   /* Spacing */
   --p-content-padding: theme('spacing.6');
   --p-component-padding: theme('spacing.4');
-  
+
   /* Borders */
   --p-border-radius: theme('borderRadius.lg');
   --p-border-color: theme('colors.slate.200');
 }
 
 /* Dark Mode Overrides */
-[data-theme="dark"] {
+[data-theme='dark'] {
   --p-surface-0: theme('colors.slate.900');
   --p-surface-50: theme('colors.slate.800');
   --p-text-color: theme('colors.slate.200');
@@ -300,24 +310,29 @@ export const useRecipeMutation = () =>
 ```
 
 ### Component Styling Strategy
+
 ```typescript
 @Component({
   template: `
     <!-- Layout with Tailwind -->
-    <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
-      
+    <div
+      class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800"
+    >
       <!-- Sidebar with custom styling -->
-      <aside class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-slate-900 shadow-xl border-r border-slate-200 dark:border-slate-700">
+      <aside
+        class="fixed inset-y-0 left-0 w-64 bg-white dark:bg-slate-900 shadow-xl border-r border-slate-200 dark:border-slate-700"
+      >
         <nav class="p-6 space-y-2">
           <!-- PrimeNG components with Tailwind classes -->
-          <p-button 
-            label="Dashboard" 
+          <p-button
+            label="Dashboard"
             icon="pi pi-home"
-            class="w-full justify-start !bg-blue-50 !text-blue-700 !border-blue-200">
+            class="w-full justify-start !bg-blue-50 !text-blue-700 !border-blue-200"
+          >
           </p-button>
         </nav>
       </aside>
-      
+
       <!-- Main content area -->
       <main class="ml-64 p-8">
         <div class="max-w-7xl mx-auto space-y-8">
@@ -328,7 +343,7 @@ export const useRecipeMutation = () =>
                 <h2 class="text-xl font-semibold text-slate-800">Recipes</h2>
               </div>
             </ng-template>
-            
+
             <div class="p-6">
               <!-- Content -->
             </div>
@@ -336,7 +351,7 @@ export const useRecipeMutation = () =>
         </div>
       </main>
     </div>
-  `
+  `,
 })
 export class AppLayoutComponent {
   // Component logic
@@ -346,38 +361,42 @@ export class AppLayoutComponent {
 ## 5. Performance & Optimization
 
 ### Bundle Optimization
+
 - **Tree-shaking**: ESBuild + Vite aggressive dead code elimination
 - **Code splitting**: Route-based lazy loading for all feature modules
 - **Dynamic imports**: On-demand component loading
 - **PrimeNG optimization**: Import only required components
 
 ### Runtime Performance
+
 - **OnPush change detection**: Automatic with signals in Angular 20
 - **Virtual scrolling**: For large data tables and lists
 - **Image optimization**: Next-gen formats with Angular's image directive
 - **Service workers**: PWA for caching and offline functionality
 
 ### Core Web Vitals Targets
+
 - **First Contentful Paint**: < 1.2s
-- **Largest Contentful Paint**: < 2.5s  
+- **Largest Contentful Paint**: < 2.5s
 - **Cumulative Layout Shift**: < 0.1
 - **First Input Delay**: < 100ms
 
 ## 6. Security Implementation
 
 ### Authentication Flow
+
 ```typescript
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private oauthService = inject(OAuthService);
   private router = inject(Router);
-  
+
   private _isAuthenticated = signal(false);
   private _user = signal<User | null>(null);
-  
+
   isAuthenticated = this._isAuthenticated.asReadonly();
   user = this._user.asReadonly();
-  
+
   async login() {
     try {
       await this.oauthService.initCodeFlow();
@@ -385,14 +404,14 @@ export class AuthService {
       console.error('Login failed:', error);
     }
   }
-  
+
   async logout() {
     await this.oauthService.logOut();
     this._isAuthenticated.set(false);
     this._user.set(null);
     this.router.navigate(['/login']);
   }
-  
+
   async refreshToken() {
     try {
       await this.oauthService.refreshToken();
@@ -406,6 +425,7 @@ export class AuthService {
 ```
 
 ### Security Headers & CSP
+
 ```typescript
 // Security configuration
 export const securityConfig = {
@@ -413,21 +433,22 @@ export const securityConfig = {
     'default-src': ["'self'"],
     'script-src': ["'self'", "'unsafe-inline'"], // Only for development
     'style-src': ["'self'", "'unsafe-inline'"],
-    'img-src': ["'self'", "data:", "https:"],
-    'connect-src': ["'self'", "https://api.example.com"]
+    'img-src': ["'self'", 'data:', 'https:'],
+    'connect-src': ["'self'", 'https://api.example.com'],
   },
   headers: {
     'X-Frame-Options': 'DENY',
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Permissions-Policy': 'camera=(), microphone=(), geolocation=()'
-  }
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+  },
 };
 ```
 
 ## 7. Testing Strategy
 
 ### Unit Testing with Vitest 3.x
+
 ```typescript
 // Component testing with Angular Testing Library
 import { render, screen } from '@testing-library/angular';
@@ -437,18 +458,18 @@ describe('RecipeListComponent', () => {
   it('should display recipes when loaded', async () => {
     const mockRecipes = [
       { id: '1', name: 'Pasta', category: 'Italian' },
-      { id: '2', name: 'Tacos', category: 'Mexican' }
+      { id: '2', name: 'Tacos', category: 'Mexican' },
     ];
-    
+
     await render(RecipeListComponent, {
       providers: [
         {
           provide: RecipeService,
-          useValue: { getRecipes: () => of(mockRecipes) }
-        }
-      ]
+          useValue: { getRecipes: () => of(mockRecipes) },
+        },
+      ],
     });
-    
+
     expect(screen.getByText('Pasta')).toBeInTheDocument();
     expect(screen.getByText('Tacos')).toBeInTheDocument();
   });
@@ -456,6 +477,7 @@ describe('RecipeListComponent', () => {
 ```
 
 ### E2E Testing with Playwright 2.x
+
 ```typescript
 // E2E test example
 import { test, expect } from '@playwright/test';
@@ -464,11 +486,11 @@ test.describe('Recipe Management', () => {
   test('should create new recipe', async ({ page }) => {
     await page.goto('/recipes');
     await page.click('[data-testid="add-recipe-btn"]');
-    
+
     await page.fill('[data-testid="recipe-name"]', 'Test Recipe');
     await page.fill('[data-testid="recipe-description"]', 'Test Description');
     await page.click('[data-testid="save-recipe-btn"]');
-    
+
     await expect(page.getByText('Recipe created successfully')).toBeVisible();
     await expect(page.getByText('Test Recipe')).toBeVisible();
   });
@@ -476,6 +498,7 @@ test.describe('Recipe Management', () => {
 ```
 
 ### Testing Coverage Requirements
+
 - **Unit tests**: 80% line coverage, 70% branch coverage
 - **Integration tests**: All critical user workflows
 - **E2E tests**: Complete user journeys and regression prevention
@@ -485,6 +508,7 @@ test.describe('Recipe Management', () => {
 ## 8. Development & Build Configuration
 
 ### Package.json Scripts
+
 ```json
 {
   "scripts": {
@@ -508,6 +532,7 @@ test.describe('Recipe Management', () => {
 ```
 
 ### Environment Configuration
+
 ```typescript
 // environment.prod.ts
 export const environment = {
@@ -520,18 +545,18 @@ export const environment = {
     responseType: 'code',
     usePkce: true,
     requireHttps: true,
-    strictDiscoveryDocumentValidation: false
+    strictDiscoveryDocumentValidation: false,
   },
   features: {
     analytics: true,
     realTimeUpdates: true,
     offlineMode: true,
-    darkMode: true
+    darkMode: true,
   },
   monitoring: {
     sentryDsn: 'your-sentry-dsn',
-    logLevel: 'error'
-  }
+    logLevel: 'error',
+  },
 };
 
 // environment.dev.ts
@@ -545,22 +570,23 @@ export const environment = {
     responseType: 'code',
     usePkce: true,
     requireHttps: false,
-    strictDiscoveryDocumentValidation: false
+    strictDiscoveryDocumentValidation: false,
   },
   features: {
     analytics: false,
     realTimeUpdates: true,
     offlineMode: false,
-    darkMode: true
+    darkMode: true,
   },
   monitoring: {
     sentryDsn: '',
-    logLevel: 'debug'
-  }
+    logLevel: 'debug',
+  },
 };
 ```
 
 ### Angular Configuration
+
 ```json
 // angular.json (key sections)
 {
@@ -575,13 +601,8 @@ export const environment = {
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.css"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.css"],
             "budgets": [
               {
                 "type": "initial",
@@ -611,14 +632,12 @@ export const environment = {
 ```
 
 ### TailwindCSS Configuration
+
 ```javascript
 // tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{html,ts}",
-    "./node_modules/primeng/**/*.js"
-  ],
+  content: ['./src/**/*.{html,ts}', './node_modules/primeng/**/*.js'],
   darkMode: ['class', '[data-theme="dark"]'],
   theme: {
     extend: {
@@ -627,49 +646,54 @@ module.exports = {
           50: '#eff6ff',
           500: '#3b82f6',
           600: '#2563eb',
-          700: '#1d4ed8'
-        }
+          700: '#1d4ed8',
+        },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif']
-      }
-    }
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
-    require('@tailwindcss/aspect-ratio')
-  ]
-}
+    require('@tailwindcss/aspect-ratio'),
+  ],
+};
 ```
 
 ## 9. Non-Functional Requirements
 
 ### Performance Requirements
+
 - **Bundle Size**: Initial bundle < 500KB, lazy routes < 200KB each
 - **Load Time**: First Contentful Paint < 1.2s, Time to Interactive < 3.0s
 - **Memory Usage**: < 50MB JavaScript heap in steady state
 - **API Response**: 95th percentile < 500ms for CRUD operations
 
 ### Scalability Requirements
+
 - **Concurrent Users**: Support 1000+ concurrent admin sessions
 - **Data Volume**: Handle 100k+ recipes, 10k+ users efficiently
 - **Horizontal Scaling**: Stateless SSR servers for load balancing
 - **CDN Integration**: Static asset delivery with cache optimization
 
 ### Security Requirements
+
 - **Authentication**: OIDC/OAuth2 with PKCE, token rotation
 - **Authorization**: Role-based access control (RBAC)
 - **Data Protection**: Input validation, XSS prevention, CSRF protection
 - **Infrastructure**: HTTPS enforcement, security headers, CSP
 
 ### Reliability & Availability
+
 - **Uptime Target**: 99.9% availability (< 8.76 hours downtime/year)
 - **Error Handling**: Graceful degradation, retry mechanisms
 - **Monitoring**: Real-time error tracking, performance monitoring
 - **Backup Strategy**: Configuration and state backup procedures
 
 ### Maintainability Requirements
+
 - **Code Quality**: TypeScript strict mode, ESLint rules, 80% test coverage
 - **Documentation**: Comprehensive component library, API documentation
 - **Dependency Management**: Automated updates, security scanning
@@ -678,13 +702,14 @@ module.exports = {
 ## 10. Deployment & Operations
 
 ### Deployment Pipeline
+
 ```yaml
 # .github/workflows/deploy.yml
 name: Deploy Admin UI
 on:
   push:
     branches: [main]
-    
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -697,7 +722,7 @@ jobs:
       - run: npm run lint
       - run: npm run test:coverage
       - run: npm run test:e2e
-      
+
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -709,7 +734,7 @@ jobs:
       - run: npm ci
       - run: npm run build:ssr
       - run: npm run analyze
-      
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -722,25 +747,26 @@ jobs:
 ```
 
 ### Monitoring & Observability
+
 ```typescript
 // monitoring.service.ts
 @Injectable({ providedIn: 'root' })
 export class MonitoringService {
   private analytics = inject(GoogleAnalytics);
   private sentry = inject(SentryService);
-  
+
   trackPageView(route: string) {
     this.analytics.pageView(route);
   }
-  
+
   trackUserAction(action: string, category: string) {
     this.analytics.event(action, { category });
   }
-  
+
   reportError(error: Error, context?: any) {
     this.sentry.captureException(error, { extra: context });
   }
-  
+
   measurePerformance(metric: string, value: number) {
     this.analytics.timing(metric, value);
   }
@@ -764,6 +790,6 @@ export class MonitoringService {
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: September 2025  
+**Document Version**: 1.0
+**Last Updated**: September 2025
 **Next Review**: October 2025

@@ -1,0 +1,30 @@
+---
+extends: default
+
+rules:
+  # 120 chars should be enough, but don't fail if a line is longer
+  line-length:
+    max: 120
+    level: warning
+
+  # Accept both tabs and spaces for indentation
+  indentation:
+    spaces: 2
+    check-multi-line-strings: false
+
+  # Allow truthy values like 'yes', 'on', etc.
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
+
+  # Don't require document start markers
+  document-start: disable
+
+  # Allow empty lines
+  empty-lines:
+    max: 2
+    max-start: 1
+    max-end: 1
+
+  # Comments can have 2 spaces after #
+  comments:
+    min-spaces-from-content: 1
