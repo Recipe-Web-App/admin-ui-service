@@ -1,0 +1,124 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.release.outputs.released }}
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test:vitest
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run linting
+        run: npm run lint:check
+
+      - name: Release
+        id: release
+        uses: google-github-actions/release-please-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: node
+          package-name: admin-ui-service
+          changelog-types: |
+            [
+              {"type":"feat","section":"Features","hidden":false},
+              {"type":"fix","section":"Bug Fixes","hidden":false},
+              {"type":"perf","section":"Performance Improvements","hidden":false},
+              {"type":"docs","section":"Documentation","hidden":false},
+              {"type":"style","section":"Styles","hidden":true},
+              {"type":"refactor","section":"Code Refactoring","hidden":true},
+              {"type":"test","section":"Tests","hidden":true},
+              {"type":"build","section":"Build System","hidden":true},
+              {"type":"ci","section":"Continuous Integration","hidden":true},
+              {"type":"chore","section":"Chores","hidden":true},
+              {"type":"revert","section":"Reverts","hidden":false}
+            ]
+
+  build-and-publish:
+    if: needs.release.outputs.released == 'true'
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Build SSR
+        run: npm run build:ssr
+
+      - name: Create deployment artifact
+        run: |
+          tar -czf admin-ui-service-${{ needs.release.outputs.version }}.tar.gz \
+            dist/ \
+            package.json \
+            package-lock.json \
+            README.md \
+            LICENSE
+
+      - name: Upload release artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: ./admin-ui-service-${{ needs.release.outputs.version }}.tar.gz
+          asset_name: admin-ui-service-${{ needs.release.outputs.version }}.tar.gz
+          asset_content_type: application/gzip
+
+  notify:
+    if: needs.release.outputs.released == 'true'
+    needs: [release, build-and-publish]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify release
+        run: |
+          echo "🎉 Released version ${{ needs.release.outputs.version }}"
+          echo "📦 Deployment artifact created"
+          echo "🔗 Release: https://github.com/${{ github.repository }}/releases/tag/${{ needs.release.outputs.tag }}"
