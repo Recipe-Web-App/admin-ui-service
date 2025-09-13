@@ -1,0 +1,119 @@
+{
+  "name": "admin-ui-service",
+  "version": "0.1.0",
+  "description": "Angular 20 admin dashboard for recipe management with SSR support",
+  "keywords": [
+    "angular",
+    "admin",
+    "dashboard",
+    "recipe",
+    "ssr",
+    "primeng",
+    "tailwindcss"
+  ],
+  "author": "Recipe Web App Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Recipe-Web-App/admin-ui-service.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Recipe-Web-App/admin-ui-service/issues"
+  },
+  "homepage": "https://github.com/Recipe-Web-App/admin-ui-service",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=11.0.0"
+  },
+  "scripts": {
+    "ng": "ng",
+    "dev": "ng serve --hmr",
+    "start": "ng serve",
+    "build": "ng build",
+    "build:ssr": "ng build && ng run admin-ui-service:server",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "test:vitest": "vitest",
+    "test:e2e": "playwright test",
+    "test:coverage": "vitest --coverage",
+    "test:ui": "vitest --ui",
+    "lint": "ng lint",
+    "lint:check": "ng lint --fix=false",
+    "lint:fix": "ng lint --fix",
+    "format": "prettier --write src/**/*.{ts,html,css,scss}",
+    "format:check": "prettier --check src/**/*.{ts,html,css,scss}",
+    "build:check": "tsc --noEmit",
+    "analyze": "ng build --stats-json && npx webpack-bundle-analyzer dist/stats.json",
+    "serve:ssr:admin-ui-service": "node dist/admin-ui-service/server/server.mjs"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "overrides": [
+      {
+        "files": "*.html",
+        "options": {
+          "parser": "angular"
+        }
+      }
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^20.3.0",
+    "@angular/compiler": "^20.3.0",
+    "@angular/core": "^20.3.0",
+    "@angular/forms": "^20.3.0",
+    "@angular/platform-browser": "^20.3.0",
+    "@angular/platform-server": "^20.3.0",
+    "@angular/router": "^20.3.0",
+    "@angular/ssr": "^20.3.1",
+    "@primeng/themes": "^20.1.1",
+    "@tanstack/angular-query-experimental": "^5.87.4",
+    "angular-oauth2-oidc": "^20.0.2",
+    "express": "^5.1.0",
+    "lucide-angular": "^0.544.0",
+    "primeicons": "^7.0.0",
+    "primeng": "^20.1.1",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zod": "^3.25.76",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.3.1",
+    "@angular/cli": "^20.3.1",
+    "@angular/compiler-cli": "^20.3.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@playwright/test": "^1.55.0",
+    "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.16",
+    "@types/express": "^5.0.1",
+    "@types/jasmine": "~5.1.0",
+    "@types/node": "^20.17.19",
+    "@vitest/ui": "^3.2.4",
+    "angular-eslint": "20.2.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "jasmine-core": "~5.9.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "license-checker": "^25.0.1",
+    "madge": "^8.0.0",
+    "markdownlint-cli": "^0.45.0",
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "stylelint": "^16.24.0",
+    "stylelint-config-standard": "^39.0.0",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "8.40.0",
+    "vitest": "^3.2.4"
+  }
+}

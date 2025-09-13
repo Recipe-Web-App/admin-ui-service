@@ -1,0 +1,58 @@
+name: 'CodeQL Security Analysis'
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+  schedule:
+    - cron: '30 2 * * 1' # Weekly on Monday at 2:30 AM UTC
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: javascript-typescript
+            build-mode: none
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          queries: +security-and-quality
+
+      - name: Setup Node.js
+        if: matrix.build-mode == 'manual'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        if: matrix.build-mode == 'manual'
+        run: npm ci
+
+      - name: Build
+        if: matrix.build-mode == 'manual'
+        run: npm run build
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:${{matrix.language}}'
+          upload: true

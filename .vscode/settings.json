@@ -1,0 +1,51 @@
+{
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.includePackageJsonAutoImports": "auto",
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "emmet.includeLanguages": {
+    "html": "html",
+    "angular": "html"
+  },
+  "html.format.wrapAttributes": "force-aligned",
+  "html.format.wrapLineLength": 100,
+  "css.validate": true,
+  "scss.validate": true,
+  "stylelint.validate": ["css", "scss"],
+  "eslint.validate": ["typescript", "html"],
+  "angular.enable-strict-mode-prompt": false,
+  "angular.experimental-ivy": true,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.angular": true,
+    "**/coverage": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/node_modules": true,
+    "**/.angular": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.angular/**": true,
+    "**/dist/**": true
+  }
+}

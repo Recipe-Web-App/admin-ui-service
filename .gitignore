@@ -1,36 +1,79 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# dependencies
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
 /node_modules
-/.pnp
-.pnp.js
+npm-debug.log
+yarn-error.log
 
-# testing
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
 /coverage
+/libpeerconnection.log
+testem.log
+/typings
 
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
+# System files
 .DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
 *.pem
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Testing
+/e2e/reports/
+/e2e/videos/
+/e2e/screenshots/
+/playwright-report/
+/test-results/
+/vitest-reports/
 
-# local env files
-.env*.local
-.env
+# Storybook
+storybook-static/
 
-# vercel
-.vercel
+# Bundle analysis
+/stats.json
+/bundle-report.html
 
-# typescript
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+tmp/
+
+# Build artifacts
+dist-ssr/
 *.tsbuildinfo
-next-env.d.ts

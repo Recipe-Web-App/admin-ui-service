@@ -1,0 +1,55 @@
+version: 2
+updates:
+  # Enable version updates for npm dependencies
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+    open-pull-requests-limit: 100
+    reviewers:
+      - 'Recipe-Web-App/maintainers'
+    assignees:
+      - 'Recipe-Web-App/maintainers'
+    commit-message:
+      prefix: 'chore(deps)'
+      include: 'scope'
+    groups:
+      angular:
+        patterns:
+          - '@angular/*'
+      testing:
+        patterns:
+          - '@playwright/*'
+          - '@vitest/*'
+          - 'vitest'
+          - 'jasmine*'
+          - 'karma*'
+      linting:
+        patterns:
+          - 'eslint*'
+          - 'prettier'
+          - 'stylelint*'
+      build-tools:
+        patterns:
+          - '@tailwindcss/*'
+          - 'tailwindcss'
+          - 'postcss'
+          - 'autoprefixer'
+    ignore:
+      # Ignore major version updates for Angular during development
+      - dependency-name: '@angular/*'
+        update-types: ['version-update:semver-major']
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+    open-pull-requests-limit: 100
+    reviewers:
+      - 'Recipe-Web-App/maintainers'
+    commit-message:
+      prefix: 'ci'
+      include: 'scope'
