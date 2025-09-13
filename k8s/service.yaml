@@ -1,0 +1,18 @@
+---
+# k8s/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-ui-service
+  namespace: admin-ui
+  labels:
+    app: admin-ui-service
+spec:
+  selector:
+    app: admin-ui-service
+  ports:
+    - name: http
+      port: 4000
+      targetPort: 4000
+      protocol: TCP
+  type: ClusterIP

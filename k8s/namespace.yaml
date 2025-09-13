@@ -1,0 +1,12 @@
+---
+# k8s/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: admin-ui
+  labels:
+    app: admin-ui-service
+    environment: development
+    team: recipe-app
+  annotations:
+    description: 'Admin UI Service namespace for Angular SSR application'
