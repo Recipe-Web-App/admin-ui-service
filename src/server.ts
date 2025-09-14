@@ -6,23 +6,23 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import apiRoutes from './api/routes';
+import { getEnvNumber } from './config/env.config';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
+ * API Routes
+ * Mount API routes with /api/v1/admin-ui prefix
  */
+app.use('/api/v1/admin-ui', apiRoutes);
 
 /**
  * Serve static files from /browser
@@ -50,7 +50,7 @@ app.use((req, res, next) => {
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
  */
 if (isMainModule(import.meta.url)) {
-  const port = process.env['PORT'] || 4000;
+  const port = getEnvNumber('PORT', 4000);
   app.listen(port, (error) => {
     if (error) {
       throw error;

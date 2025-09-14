@@ -1,0 +1,26 @@
+---
+# k8s/configmap-template.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: admin-ui-config
+  namespace: admin-ui
+  labels:
+    app: admin-ui-service
+data:
+  # Essential Runtime Configuration
+  NODE_ENV: '${NODE_ENV}'
+  PORT: '${APP_PORT}'
+  NODE_OPTIONS: '${NODE_OPTIONS}'
+
+  # Angular SSR Configuration
+  ANGULAR_SSR_ENABLED: '${ANGULAR_SSR_ENABLED}'
+
+  # Backend API Configuration
+  API_URL: '${API_URL}'
+
+  # OAuth2 Service Configuration
+  OAUTH2_SERVICE_ENABLED: '${OAUTH2_SERVICE_ENABLED}'
+  OAUTH2_SERVICE_TO_SERVICE_ENABLED: '${OAUTH2_SERVICE_TO_SERVICE_ENABLED}'
+  OAUTH2_INTROSPECTION_ENABLED: '${OAUTH2_INTROSPECTION_ENABLED}'
+  OAUTH2_CLIENT_ID: '${OAUTH2_CLIENT_ID}'

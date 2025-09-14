@@ -1,0 +1,70 @@
+# ==============================================================================
+# Docker Compose Configuration for Recipe Web App - Admin UI Service
+# Kubernetes-ready setup (simplified, no reverse proxy)
+# ==============================================================================
+
+version: '3.8'
+
+services:
+  # ------------------------------------------------------------------------------
+  # Admin UI Service - Angular SSR Application
+  # ------------------------------------------------------------------------------
+  admin-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+      args:
+        - API_URL=${API_URL:-http://localhost:8080/api}
+        - AUTH_ISSUER=${AUTH_ISSUER:-http://localhost:8080/auth}
+        - AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-admin-ui-client}
+    image: recipe-app/admin-ui:${TAG:-latest}
+    container_name: recipe-admin-ui
+    restart: unless-stopped
+    ports:
+      - '${APP_PORT:-4000}:4000'
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - API_URL=${API_URL:-http://localhost:8080/api}
+      - AUTH_ISSUER=${AUTH_ISSUER:-http://localhost:8080/auth}
+      - AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-admin-ui-client}
+      - ENABLE_ANALYTICS=${ENABLE_ANALYTICS:-false}
+      - ENABLE_REAL_TIME_UPDATES=${ENABLE_REAL_TIME_UPDATES:-true}
+      - ENABLE_OFFLINE_MODE=${ENABLE_OFFLINE_MODE:-false}
+      - ENABLE_DARK_MODE=${ENABLE_DARK_MODE:-true}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - SENTRY_DSN=${SENTRY_DSN:-}
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    labels:
+      - 'com.docker.compose.service=admin-ui'
+      - 'com.recipe-app.component=frontend'
+      - 'com.recipe-app.port=4000'
+# ==============================================================================
+# Environment Variables Documentation
+# ==============================================================================
+# Copy .env.docker to .env and customize the following variables:
+#
+# Core Configuration:
+# - TAG: Docker image tag (default: latest)
+# - NODE_ENV: Environment mode (development/production)
+# - APP_PORT: Application port mapping (default: 4000)
+#
+# API Configuration:
+# - API_URL: Backend API URL
+# - AUTH_ISSUER: OAuth2/OIDC issuer URL
+# - AUTH_CLIENT_ID: OAuth2 client ID
+#
+# Feature Flags:
+# - ENABLE_ANALYTICS: Enable/disable analytics (true/false)
+# - ENABLE_REAL_TIME_UPDATES: Enable real-time features (true/false)
+# - ENABLE_OFFLINE_MODE: Enable offline capabilities (true/false)
+# - ENABLE_DARK_MODE: Enable dark mode toggle (true/false)
+#
+# Monitoring:
+# - LOG_LEVEL: Logging level (debug/info/warn/error)
+# - SENTRY_DSN: Sentry error tracking DSN
+# ==============================================================================

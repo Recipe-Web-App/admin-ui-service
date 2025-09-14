@@ -1,0 +1,193 @@
+# ==============================================================================
+# Docker Compose Override for Development Environment
+# Automatically loaded when running docker-compose up in development
+# ==============================================================================
+
+version: '3.8'
+
+services:
+  # ------------------------------------------------------------------------------
+  # Development Overrides for Admin UI Service
+  # ------------------------------------------------------------------------------
+  admin-ui:
+    build:
+      target: development
+      args:
+        - NODE_ENV=development
+    environment:
+      - NODE_ENV=development
+      - LOG_LEVEL=debug
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    ports:
+      - '4200:4200' # Angular dev server
+      - '49153:49153' # HMR (Hot Module Replacement)
+      - '9229:9229' # Node.js debug port
+    volumes:
+      # Bind mount source code for hot reload
+      - ./src:/app/src:cached
+      - ./public:/app/public:cached
+      - ./angular.json:/app/angular.json:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
+      - ./tsconfig.app.json:/app/tsconfig.app.json:ro
+      - ./tailwind.config.js:/app/tailwind.config.js:ro
+      - ./postcss.config.js:/app/postcss.config.js:ro
+      - ./package.json:/app/package.json:ro
+      # Exclude node_modules to prevent conflicts
+      - /app/node_modules
+    command: ['npm', 'run', 'dev']
+    read_only: false
+    tmpfs:
+      - /tmp:noexec,nosuid,size=500m
+      - /app/.angular:noexec,nosuid,size=200m
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.admin-ui-dev.rule=Host(`dev.${DOMAIN:-localhost}`)'
+      - 'traefik.http.services.admin-ui-dev.loadbalancer.server.port=4200'
+
+  # ------------------------------------------------------------------------------
+  # Testing Services
+  # ------------------------------------------------------------------------------
+  # Playwright E2E Testing Container
+  playwright:
+    build:
+      context: .
+      dockerfile: Dockerfile.playwright
+    container_name: recipe-playwright
+    environment:
+      - BASE_URL=http://admin-ui:4200
+      - CI=true
+    volumes:
+      - ./tests:/app/tests:cached
+      - ./playwright.config.ts:/app/playwright.config.ts:ro
+      - ./test-results:/app/test-results
+      - ./playwright-report:/app/playwright-report
+    networks:
+      - recipe-network
+    depends_on:
+      - admin-ui
+    profiles:
+      - testing
+    command: ['npm', 'run', 'test:e2e']
+
+  # Vitest Unit Testing with Watch Mode
+  vitest:
+    build:
+      context: .
+      target: development
+    container_name: recipe-vitest
+    environment:
+      - NODE_ENV=test
+    volumes:
+      - ./src:/app/src:cached
+      - ./vitest.config.ts:/app/vitest.config.ts:ro
+      - ./coverage:/app/coverage
+    networks:
+      - recipe-network
+    profiles:
+      - testing
+    command: ['npm', 'run', 'test:vitest', '--', '--watch']
+
+  # ------------------------------------------------------------------------------
+  # Development Database (if needed)
+  # ------------------------------------------------------------------------------
+  postgres-dev:
+    image: postgres:16.4-alpine
+    container_name: recipe-postgres-dev
+    environment:
+      - POSTGRES_DB=recipe_admin_dev
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=dev_password_123
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - recipe-network
+    profiles:
+      - database
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U admin -d recipe_admin_dev']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for Session/Caching (if needed)
+  redis-dev:
+    image: redis:7.4.1-alpine
+    container_name: recipe-redis-dev
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-dev-data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - recipe-network
+    profiles:
+      - cache
+    command: ['redis-server', '/usr/local/etc/redis/redis.conf']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ------------------------------------------------------------------------------
+  # Development Tools
+  # ------------------------------------------------------------------------------
+  # Code Quality & Security Scanner
+  sonarqube:
+    image: sonarqube:10.7.0-community
+    container_name: recipe-sonarqube
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    ports:
+      - '9000:9000'
+    volumes:
+      - sonarqube-data:/opt/sonarqube/data
+      - sonarqube-logs:/opt/sonarqube/logs
+      - sonarqube-extensions:/opt/sonarqube/extensions
+    networks:
+      - recipe-network
+    profiles:
+      - quality
+
+volumes:
+  postgres-dev-data:
+    driver: local
+  redis-dev-data:
+    driver: local
+  sonarqube-data:
+    driver: local
+  sonarqube-logs:
+    driver: local
+  sonarqube-extensions:
+    driver: local
+# ==============================================================================
+# Development Usage Examples:
+# ==============================================================================
+#
+# Start development environment:
+# docker-compose up
+#
+# Start with specific profiles:
+# docker-compose --profile testing --profile database up
+#
+# Run only tests:
+# docker-compose --profile testing up playwright vitest
+#
+# Start with database and cache:
+# docker-compose --profile database --profile cache up
+#
+# Rebuild and start:
+# docker-compose up --build
+#
+# Run in background:
+# docker-compose up -d
+#
+# View logs:
+# docker-compose logs -f admin-ui
+#
+# ==============================================================================

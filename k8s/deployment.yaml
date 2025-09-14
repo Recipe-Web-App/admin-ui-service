@@ -1,0 +1,96 @@
+---
+# k8s/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-ui-service
+  namespace: admin-ui
+  labels:
+    app: admin-ui-service
+  annotations:
+    kube-score/ignore: container-image-tag,container-image-pull-policy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-ui-service
+  template:
+    metadata:
+      labels:
+        app: admin-ui-service
+    spec:
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: admin-ui-service
+          image: admin-ui-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 4000
+              name: http
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: admin-ui-config
+            - secretRef:
+                name: admin-ui-secrets
+          readinessProbe:
+            httpGet:
+              path: /api/v1/admin-ui/ready
+              port: 4000
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+            successThreshold: 1
+          livenessProbe:
+            httpGet:
+              path: /api/v1/admin-ui/health
+              port: 4000
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+          startupProbe:
+            httpGet:
+              path: /api/v1/admin-ui/ready
+              port: 4000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 12
+            successThreshold: 1
+          resources:
+            requests:
+              cpu: '100m'
+              memory: '128Mi'
+              ephemeral-storage: '50Mi'
+            limits:
+              cpu: '500m'
+              memory: '512Mi'
+              ephemeral-storage: '200Mi'
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: angular-cache
+              mountPath: /app/dist/cache
+            - name: tmp-volume
+              mountPath: /tmp
+      volumes:
+        - name: angular-cache
+          emptyDir:
+            sizeLimit: 128Mi
+        - name: tmp-volume
+          emptyDir:
+            sizeLimit: 64Mi
