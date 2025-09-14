@@ -30,7 +30,6 @@
     "dev": "ng serve --hmr",
     "start": "ng serve",
     "build": "ng build",
-    "build:ssr": "ng build && ng run admin-ui-service:server",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:vitest": "vitest",

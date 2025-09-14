@@ -3,118 +3,189 @@
 # Multi-stage Dockerfile for Angular 20 Admin UI Service with SSR
 # ==============================================================================
 
-# ------------------------------------------------------------------------------
-# Stage 1: Base Image with Security Updates
-# ------------------------------------------------------------------------------
-FROM node:20.18.1-alpine3.20 AS base
+# Global build arguments
+ARG APP_VERSION
+ARG BUILD_DATE
+ARG VCS_REF
 
-# Security updates and essential packages
-RUN apk update && apk upgrade && \
-    apk add --no-cache \
-    dumb-init=1.2.5-r3 \
-    tini=0.19.0-r3 \
-    curl=8.9.1-r2 \
-    && rm -rf /var/cache/apk/*
+# Stage 1: Dependencies
+FROM node:24-alpine AS deps
+LABEL stage=deps \
+      org.opencontainers.image.title="Admin UI Service - Dependencies" \
+      org.opencontainers.image.description="Dependencies stage for Admin UI Service" \
+      org.opencontainers.image.version="${APP_VERSION}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${VCS_REF}" \
+      org.opencontainers.image.vendor="Recipe App Team" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.source="https://github.com/Recipe-Web-App/admin-ui-service"
 
-# Create non-root user for security
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S angular -u 1001 -G nodejs
-
-# Set working directory
 WORKDIR /app
 
-# Set NODE_ENV
-ENV NODE_ENV=production
-ENV CI=true
+# Install security updates and required packages
+# Using latest versions from Alpine repository
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache \
+        libc6-compat \
+        ca-certificates \
+        tzdata && \
+    rm -rf /var/cache/apk/* && \
+    # Update npm to version 11 to meet >=11.0.0 requirement
+    npm install -g npm@11
 
-# ------------------------------------------------------------------------------
-# Stage 2: Dependencies Installation
-# ------------------------------------------------------------------------------
-FROM base AS deps
+# Set timezone
+ENV TZ=UTC
 
-# Copy package files for better caching
-COPY package*.json ./
+# Copy package files with specific ownership
+COPY --chown=node:node package*.json ./
 
-# Install dependencies with npm ci for reproducible builds
-RUN npm ci --only=production --frozen-lockfile && \
+# Verify package integrity and install dependencies
+RUN npm ci --only=production --frozen-lockfile --audit=false --fund=false && \
     npm cache clean --force
 
-# Install dev dependencies in separate layer for build stage
-FROM base AS deps-build
-COPY package*.json ./
-RUN npm ci --frozen-lockfile && \
+# Remove package files to reduce attack surface
+RUN rm -f package*.json
+
+# Stage 2: Builder
+FROM node:24-alpine AS builder
+LABEL stage=builder \
+      org.opencontainers.image.title="Admin UI Service - Builder" \
+      org.opencontainers.image.description="Build stage for Admin UI Service" \
+      org.opencontainers.image.version="${APP_VERSION}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${VCS_REF}"
+
+WORKDIR /app
+
+# Install build dependencies
+# Using latest versions from Alpine repository
+RUN apk add --no-cache \
+        python3 \
+        make \
+        g++ \
+        git && \
+    rm -rf /var/cache/apk/* && \
+    # Update npm to version 11 to meet >=11.0.0 requirement
+    npm install -g npm@11
+
+# Copy production node_modules from deps stage
+COPY --from=deps --chown=node:node /app/node_modules ./node_modules
+
+# Copy package files
+COPY --chown=node:node package*.json ./
+
+# Install all dependencies (including devDependencies) with mount cache
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/app/.angular/cache \
+    npm ci --frozen-lockfile --prefer-offline
+
+# Copy source code with proper ownership and .dockerignore respect
+COPY --chown=node:node . .
+
+# Set build environment variables
+ENV NG_CLI_ANALYTICS=false \
+    NODE_ENV=production \
+    NODE_OPTIONS="--max-old-space-size=2048"
+
+# Build the application with optimizations
+RUN --mount=type=cache,target=/app/.angular/cache \
+    npm run build && \
+    npm prune --production && \
     npm cache clean --force
 
-# ------------------------------------------------------------------------------
-# Stage 3: Build Application
-# ------------------------------------------------------------------------------
-FROM deps-build AS build
+# Verify build artifacts
+RUN test -d dist || (echo "Build failed: dist not found" && exit 1)
 
-# Copy source code
-COPY . .
+# Stage 3: Runtime Security Scanner (Optional)
+FROM builder AS security-scanner
+LABEL stage=security-scanner
 
-# Set build-time environment variables
-ARG API_URL=http://localhost:8080/api
-ARG AUTH_ISSUER=http://localhost:8080/auth
-ARG AUTH_CLIENT_ID=admin-ui-client
-ARG NODE_ENV=production
+# Install security scanning tools
+# Using latest versions from Alpine repository
+RUN apk add --no-cache \
+        curl \
+        jq && \
+    rm -rf /var/cache/apk/*
 
-ENV API_URL=$API_URL
-ENV AUTH_ISSUER=$AUTH_ISSUER
-ENV AUTH_CLIENT_ID=$AUTH_CLIENT_ID
+# Run security scans (optional, can be skipped in CI)
+RUN npm audit --production --audit-level=high || true
 
-# Build the application with SSR
-RUN npm run build:ssr
-
-# ------------------------------------------------------------------------------
-# Stage 4: Production Runtime
-# ------------------------------------------------------------------------------
-FROM base AS runtime
-
-# Add metadata labels following OCI spec
-LABEL org.opencontainers.image.title="Recipe Web App - Admin UI Service" \
-      org.opencontainers.image.description="Angular 20 admin dashboard with SSR support" \
-      org.opencontainers.image.version="0.1.0" \
-      org.opencontainers.image.vendor="Recipe Web App Team" \
+# Stage 4: Final Runtime
+FROM node:24-alpine AS runner
+LABEL stage=runner \
+      org.opencontainers.image.title="Admin UI Service" \
+      org.opencontainers.image.description="Production-ready Admin UI Service" \
+      org.opencontainers.image.version="${APP_VERSION}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${VCS_REF}" \
+      org.opencontainers.image.vendor="Recipe App Team" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.source="https://github.com/Recipe-Web-App/admin-ui-service" \
       org.opencontainers.image.documentation="https://github.com/Recipe-Web-App/admin-ui-service" \
+      org.opencontainers.image.authors="Recipe Web App Team" \
       maintainer="Recipe Web App Team"
 
-# Copy production dependencies
-COPY --from=deps --chown=angular:nodejs /app/node_modules ./node_modules
+# Install runtime security updates and essential packages
+# Using latest versions from Alpine repository
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache \
+        dumb-init \
+        ca-certificates \
+        tzdata \
+        tini && \
+    rm -rf /var/cache/apk/* && \
+    # Create app directory with secure permissions
+    mkdir -p /app && \
+    # Create non-root user with specific UID/GID
+    addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 --ingroup nodejs --home /app angular
 
-# Copy built application
-COPY --from=build --chown=angular:nodejs /app/dist ./dist
+# Set secure environment variables
+ENV NODE_ENV=production \
+    NG_CLI_ANALYTICS=false \
+    NODE_OPTIONS="--unhandled-rejections=strict --enable-source-maps" \
+    TZ=UTC \
+    PORT=4000 \
+    HOSTNAME="0.0.0.0" \
+    # Security hardening
+    NODE_TLS_REJECT_UNAUTHORIZED=1
 
-# Switch to non-root user
+WORKDIR /app
+
+# Copy built application with proper ownership and minimal files
+COPY --from=builder --chown=angular:nodejs /app/dist ./dist
+COPY --from=builder --chown=angular:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=angular:nodejs /app/package.json ./package.json
+
+# Set final permissions and switch to non-root user
+RUN chown -R angular:nodejs /app && \
+    chmod 755 /app
 USER angular
 
-# Expose port
+# Create non-root owned directories for Angular
+RUN mkdir -p dist/cache && \
+    chmod 755 dist/cache
+
+# Expose port (non-privileged)
 EXPOSE 4000
 
-# Use tini as PID 1 for proper signal handling
+# Add resource limits and performance optimizations
+ENV NODE_OPTIONS="--max-old-space-size=448"
+
+# Use tini for proper signal handling (alternative to dumb-init)
 ENTRYPOINT ["tini", "--"]
 
-# Start the application
-CMD ["node", "dist/admin-ui-service/server/server.mjs"]
+# Add startup script with graceful shutdown
+CMD ["sh", "-c", "trap 'echo Received SIGTERM, shutting down gracefully; kill -TERM $PID; wait $PID' TERM; node dist/admin-ui-service/server/server.mjs & PID=$!; wait $PID"]
 
-# ------------------------------------------------------------------------------
-# Development Stage (Optional - for debugging)
-# ------------------------------------------------------------------------------
-FROM deps-build AS development
+# Add build metadata as labels (populated by CI/CD)
+LABEL build.number="${BUILD_NUMBER:-unknown}" \
+      build.url="${BUILD_URL:-unknown}" \
+      git.branch="${GIT_BRANCH:-unknown}" \
+      git.commit="${GIT_COMMIT:-unknown}"
 
-# Install additional dev tools
-RUN npm install -g @angular/cli@20.3.1
-
-# Copy source code
-COPY --chown=angular:nodejs . .
-
-# Switch to non-root user
-USER angular
-
-# Expose development ports
-EXPOSE 4200 49153
-
-# Start development server
-CMD ["npm", "run", "dev"]
+# Security: Run as non-root, read-only root filesystem ready
+# Note: Use --read-only flag when running the container
+# docker run --read-only --tmpfs /tmp --tmpfs /app/dist/cache admin-ui-service
