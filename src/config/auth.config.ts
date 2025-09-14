@@ -2,8 +2,10 @@
  * Authentication Configuration
  *
  * Defines authentication settings that are build-time constants.
- * Environment-specific values like client ID still come from environment variables.
+ * Environment-specific values like client ID come from environment variables or .env files.
  */
+
+import { getEnvVar, getEnvBool } from './env.config';
 
 export interface AuthConfig {
   issuer: string;
@@ -74,7 +76,7 @@ export const authConfig: Record<string, AuthConfig> = {
  * Get authentication configuration for current environment
  */
 export function getAuthConfig(): AuthConfig {
-  const env = process.env['NODE_ENV'] || 'development';
+  const env = getEnvVar('NODE_ENV', 'development')!;
   return authConfig[env] || authConfig['development'];
 }
 
@@ -82,7 +84,7 @@ export function getAuthConfig(): AuthConfig {
  * Get client ID from environment (this should remain an env var)
  */
 export function getClientId(): string {
-  return process.env['OAUTH2_CLIENT_ID'] || 'admin-ui-client';
+  return getEnvVar('OAUTH2_CLIENT_ID', 'admin-ui-client')!;
 }
 
 /**
@@ -93,21 +95,21 @@ export function getClientId(): string {
  * Check if OAuth2 service is enabled
  */
 export function isOAuth2Enabled(): boolean {
-  return process.env['OAUTH2_SERVICE_ENABLED'] === 'true';
+  return getEnvBool('OAUTH2_SERVICE_ENABLED');
 }
 
 /**
  * Check if OAuth2 introspection is enabled (vs local JWT validation)
  */
 export function isIntrospectionEnabled(): boolean {
-  return process.env['OAUTH2_INTROSPECTION_ENABLED'] === 'true';
+  return getEnvBool('OAUTH2_INTROSPECTION_ENABLED');
 }
 
 /**
  * Check if service-to-service authentication is enabled
  */
 export function isServiceToServiceEnabled(): boolean {
-  return process.env['OAUTH2_SERVICE_TO_SERVICE_ENABLED'] === 'true';
+  return getEnvBool('OAUTH2_SERVICE_TO_SERVICE_ENABLED');
 }
 
 /**
@@ -115,7 +117,7 @@ export function isServiceToServiceEnabled(): boolean {
  * Only used when introspection is disabled
  */
 export function getJWTSecret(): string | null {
-  const secret = process.env['JWT_SECRET'];
+  const secret = getEnvVar('JWT_SECRET');
   if (!secret) {
     console.warn('JWT_SECRET not configured - local JWT validation will fail');
     return null;
@@ -127,7 +129,7 @@ export function getJWTSecret(): string | null {
  * Get OAuth2 client secret (for introspection)
  */
 export function getClientSecret(): string | null {
-  const secret = process.env['OAUTH2_CLIENT_SECRET'];
+  const secret = getEnvVar('OAUTH2_CLIENT_SECRET');
   if (!secret) {
     console.warn('OAUTH2_CLIENT_SECRET not configured - introspection will fail');
     return null;

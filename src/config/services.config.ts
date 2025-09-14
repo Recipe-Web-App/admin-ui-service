@@ -5,6 +5,8 @@
  * These are build-time configurations that don't change per environment.
  */
 
+import { getEnvVar } from './env.config';
+
 export interface ServiceEndpoints {
   recipes: string;
   users: string;
@@ -42,7 +44,7 @@ export const serviceConfig: Record<string, ServiceEndpoints> = {
  * Get service endpoints for current environment
  */
 export function getServiceEndpoints(): ServiceEndpoints {
-  const env = process.env['NODE_ENV'] || 'development';
+  const env = getEnvVar('NODE_ENV', 'development')!;
   return serviceConfig[env] || serviceConfig['development'];
 }
 
@@ -50,6 +52,6 @@ export function getServiceEndpoints(): ServiceEndpoints {
  * Build full URL for a service endpoint
  */
 export function buildServiceUrl(endpoint: string): string {
-  const baseUrl = process.env['API_URL'] || 'http://localhost:8080';
+  const baseUrl = getEnvVar('API_URL', 'http://localhost:8080')!;
   return `${baseUrl}${endpoint}`;
 }

@@ -5,6 +5,8 @@
  * These are build-time configurations that can vary by environment.
  */
 
+import { getEnvVar, getEnvBool } from './env.config';
+
 export interface AppConfig {
   // Performance settings
   cache: {
@@ -155,7 +157,7 @@ export const appConfig: Record<string, AppConfig> = {
  * Get application configuration for current environment
  */
 export function getAppConfig(): AppConfig {
-  const env = process.env['NODE_ENV'] || 'development';
+  const env = getEnvVar('NODE_ENV', 'development')!;
   return appConfig[env] || appConfig['development'];
 }
 
@@ -170,9 +172,9 @@ export function isFeatureEnabled(feature: keyof AppConfig['features']): boolean 
  * Get SSR enabled status from environment or config
  */
 export function isSSREnabled(): boolean {
-  const envSSR = process.env['ANGULAR_SSR_ENABLED'];
+  const envSSR = getEnvVar('ANGULAR_SSR_ENABLED');
   if (envSSR !== undefined) {
-    return envSSR === 'true' || envSSR === '1';
+    return getEnvBool('ANGULAR_SSR_ENABLED');
   }
   return getAppConfig().features.enableSSR;
 }
