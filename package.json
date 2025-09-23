@@ -67,7 +67,7 @@
     "@angular/platform-server": "^20.3.0",
     "@angular/router": "^20.3.0",
     "@angular/ssr": "^20.3.1",
-    "@primeng/themes": "^20.1.1",
+    "@primeng/themes": "^20.1.2",
     "@tanstack/angular-query-experimental": "^5.87.4",
     "@types/uuid": "^11.0.0",
     "angular-oauth2-oidc": "^20.0.2",
