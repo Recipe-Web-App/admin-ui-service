@@ -96,7 +96,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/node": "^24.3.3",
     "@vitest/ui": "^3.2.4",
-    "angular-eslint": "20.2.0",
+    "angular-eslint": "20.3.0",
     "autoprefixer": "^10.4.21",
     "dotenv": "^17.2.2",
     "eslint": "^9.33.0",
