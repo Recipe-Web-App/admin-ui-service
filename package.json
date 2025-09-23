@@ -94,7 +94,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",
-    "@types/node": "^24.3.3",
+    "@types/node": "^24.5.2",
     "@vitest/ui": "^3.2.4",
     "angular-eslint": "20.3.0",
     "autoprefixer": "^10.4.21",
