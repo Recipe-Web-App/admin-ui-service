@@ -68,7 +68,7 @@
     "@angular/router": "^20.3.2",
     "@angular/ssr": "^20.3.3",
     "@primeng/themes": "^20.1.2",
-    "@tanstack/angular-query-experimental": "^5.90.1",
+    "@tanstack/angular-query-experimental": "^5.90.2",
     "@types/uuid": "^11.0.0",
     "angular-oauth2-oidc": "^20.0.2",
     "express": "^5.1.0",
