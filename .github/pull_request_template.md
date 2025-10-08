@@ -122,7 +122,7 @@ Tested on:
 ## Documentation
 
 - [ ] README updated
-- [ ] TECHNICAL_SPEC updated
+- [ ] .github/TECHNICAL_SPEC updated
 - [ ] Code comments added
 - [ ] API documentation updated
 - [ ] No documentation changes needed

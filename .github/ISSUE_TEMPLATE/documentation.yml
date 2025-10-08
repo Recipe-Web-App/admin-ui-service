@@ -37,7 +37,7 @@ body:
       description: Where is the documentation located?
       options:
         - README.md
-        - TECHNICAL_SPEC.md
+        - .github/TECHNICAL_SPEC.md
         - CONTRIBUTING.md
         - SECURITY.md
         - CHANGELOG.md

@@ -5,7 +5,7 @@ Welcome to the Recipe Admin UI Service support documentation! This guide will he
 ## 📖 Documentation
 
 - **[README](../README.md)** - Overview, quick start, and available scripts
-- **[Technical Specification](../TECHNICAL_SPEC.md)** - Detailed technical documentation
+- **[Technical Specification](TECHNICAL_SPEC.md)** - Detailed technical documentation
 - **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to the project
 - **[Security Policy](SECURITY.md)** - Security reporting and best practices
 - **[Changelog](../CHANGELOG.md)** - Version history and changes
@@ -60,7 +60,7 @@ See our [Security Policy](SECURITY.md) for details.
 **Q: How do I set up OAuth2 authentication?**
 
 - Configure your OAuth2 provider settings in `.env`
-- See the authentication section in [TECHNICAL_SPEC.md](../TECHNICAL_SPEC.md)
+- See the authentication section in [TECHNICAL_SPEC.md](TECHNICAL_SPEC.md)
 
 **Q: How do I enable dark mode?**
 

@@ -51,7 +51,7 @@ jobs:
 
             **Helpful Resources:**
             - [Project Documentation](../README.md)
-            - [Technical Specification](../TECHNICAL_SPEC.md)
+            - [Technical Specification](.github/TECHNICAL_SPEC.md)
             - [Support Guide](.github/SUPPORT.md)
 
             Welcome to the Recipe Web App community! 🎉`
@@ -99,7 +99,7 @@ jobs:
             - [Contributing Guidelines](.github/CONTRIBUTING.md)
             - [Code of Conduct](.github/CODE_OF_CONDUCT.md)
             - [Pull Request Template](.github/pull_request_template.md)
-            - [Technical Specification](../TECHNICAL_SPEC.md)
+            - [Technical Specification](.github/TECHNICAL_SPEC.md)
 
             Thank you for being part of our community! 🙌`
               });

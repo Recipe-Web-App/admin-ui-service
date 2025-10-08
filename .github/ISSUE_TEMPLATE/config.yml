@@ -10,5 +10,5 @@ contact_links:
     url: https://github.com/Recipe-Web-App/admin-ui-service/blob/main/README.md
     about: View comprehensive documentation and guides
   - name: 📋 Technical Specification
-    url: https://github.com/Recipe-Web-App/admin-ui-service/blob/main/TECHNICAL_SPEC.md
+    url: https://github.com/Recipe-Web-App/admin-ui-service/blob/main/.github/TECHNICAL_SPEC.md
     about: View detailed technical specifications
