@@ -192,7 +192,7 @@ For project-related questions, use GitHub Discussions or Issues.
 For other inquiries:
 
 - Organization: Recipe-Web-App
-- Maintainer: @jsamuelsen
+- Maintainer: @jsamuelsen11
 
 ---
 
