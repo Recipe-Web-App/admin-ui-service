@@ -1,0 +1,114 @@
+# PR Labeler Configuration
+# Automatically labels PRs based on changed files
+
+# Dependencies
+dependencies:
+  - package.json
+  - package-lock.json
+
+# Documentation
+documentation:
+  - '**/*.md'
+  - docs/**/*
+
+# GitHub configuration
+github:
+  - .github/**/*
+
+# Workflows
+github-actions:
+  - .github/workflows/**/*
+
+# Docker
+docker:
+  - Dockerfile
+  - docker-compose*.yml
+  - .dockerignore
+
+# Kubernetes
+kubernetes:
+  - k8s/**/*
+
+# Configuration
+configuration:
+  - '**/*.yml'
+  - '**/*.yaml'
+  - '**/*.json'
+  - .env.example
+  - angular.json
+  - tsconfig*.json
+
+# TypeScript/JavaScript source code
+typescript:
+  - '**/*.ts'
+  - '**/*.js'
+
+# HTML templates
+html:
+  - '**/*.html'
+
+# Styles
+styles:
+  - '**/*.css'
+  - '**/*.scss'
+  - tailwind.config.js
+  - .stylelintrc.json
+
+# Tests
+tests:
+  - '**/*.spec.ts'
+  - e2e/**/*
+  - vitest.config.ts
+  - playwright.config.ts
+
+# Core modules
+core:
+  - src/app/core/**/*
+
+# Shared modules
+shared:
+  - src/app/shared/**/*
+
+# Features
+features:
+  - src/app/features/**/*
+
+# Layout
+layout:
+  - src/app/layout/**/*
+
+# Authentication
+authentication:
+  - src/app/core/auth/**/*
+  - src/app/features/auth/**/*
+
+# API Integration
+api:
+  - src/app/core/services/**/*
+  - src/app/core/models/**/*
+
+# Build and tooling
+build-tools:
+  - scripts/**/*
+  - '**/*.sh'
+  - package.json
+  - angular.json
+
+# Linting configuration
+linting:
+  - eslint.config.js
+  - .prettierrc
+  - .stylelintrc.json
+  - .editorconfig
+
+# Security
+security:
+  - .github/SECURITY.md
+  - .secrets.baseline
+  - .pre-commit-config.yaml
+
+# Performance
+performance:
+  - '**/*lazy*'
+  - '**/*performance*'
+  - '**/*optimization*'

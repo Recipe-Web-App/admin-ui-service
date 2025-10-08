@@ -1,0 +1,54 @@
+# Code Ownership for Recipe Admin UI Service
+#
+# This file defines code ownership for automatic reviewer assignment
+# Each line is a file pattern followed by one or more owners
+# More specific patterns override more general ones
+#
+# Documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global ownership - applies to everything unless overridden
+* @jsamuelsen
+
+# GitHub configuration
+/.github/ @jsamuelsen
+
+# Documentation
+*.md @jsamuelsen
+/docs/ @jsamuelsen
+
+# Configuration files
+*.json @jsamuelsen
+*.yml @jsamuelsen
+*.yaml @jsamuelsen
+.env.example @jsamuelsen
+
+# Source code
+/src/ @jsamuelsen
+
+# Angular specific
+/src/app/core/ @jsamuelsen
+/src/app/shared/ @jsamuelsen
+/src/app/features/ @jsamuelsen
+
+# Tests
+*.spec.ts @jsamuelsen
+/e2e/ @jsamuelsen
+
+# Build and tooling
+/scripts/ @jsamuelsen
+angular.json @jsamuelsen
+tsconfig*.json @jsamuelsen
+package.json @jsamuelsen
+package-lock.json @jsamuelsen
+
+# Docker
+Dockerfile @jsamuelsen
+docker-compose*.yml @jsamuelsen
+.dockerignore @jsamuelsen
+
+# Kubernetes
+/k8s/ @jsamuelsen
+
+# Security
+/.github/SECURITY.md @jsamuelsen
+.secrets.baseline @jsamuelsen

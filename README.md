@@ -128,7 +128,7 @@ npm run serve:ssr:admin-ui-service
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guidelines](.github/CONTRIBUTING.md) for details.
 
 ### Development Process
 
@@ -142,7 +142,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 ## 🔒 Security
 
-Security is a top priority. Please see our [Security Policy](SECURITY.md) for reporting vulnerabilities.
+Security is a top priority. Please see our [Security Policy](.github/SECURITY.md) for reporting vulnerabilities.
 
 ## 📄 License
 

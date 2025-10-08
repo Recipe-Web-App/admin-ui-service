@@ -1,0 +1,124 @@
+name: 📚 Documentation
+description: Report documentation issues or suggest improvements
+title: '[Docs] '
+labels: ['documentation', 'needs-triage']
+assignees:
+  - jsamuelsen
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve our documentation!
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Issue Type
+      description: What type of documentation issue is this?
+      options:
+        - Missing Documentation
+        - Incorrect Documentation
+        - Unclear/Confusing Documentation
+        - Typo/Grammar
+        - Outdated Documentation
+        - Code Example Error
+        - Broken Link
+        - Formatting Issue
+        - Translation Issue
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: location
+    attributes:
+      label: Documentation Location
+      description: Where is the documentation located?
+      options:
+        - README.md
+        - TECHNICAL_SPEC.md
+        - CONTRIBUTING.md
+        - SECURITY.md
+        - CHANGELOG.md
+        - Code Comments/JSDoc
+        - GitHub Wiki
+        - API Documentation
+        - Component Documentation
+        - Configuration Documentation
+        - Deployment Guide
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue Description
+      description: Describe the documentation issue
+      placeholder: What is wrong or missing in the documentation?
+    validations:
+      required: true
+
+  - type: textarea
+    id: location-specific
+    attributes:
+      label: Specific Location
+      description: Exact location of the issue
+      placeholder: |
+        - File: README.md
+        - Section: "Getting Started"
+        - Line: 45
+        - URL: https://...
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-documentation
+    attributes:
+      label: Current Documentation
+      description: Quote the current documentation (if applicable)
+      placeholder: |
+        > Current text from the documentation
+    validations:
+      required: false
+
+  - type: textarea
+    id: suggested-improvement
+    attributes:
+      label: Suggested Improvement
+      description: How should the documentation be improved?
+      placeholder: |
+        Proposed new text or changes to fix the issue
+    validations:
+      required: true
+
+  - type: dropdown
+    id: target-audience
+    attributes:
+      label: Target Audience
+      description: Who is this documentation for?
+      options:
+        - End Users
+        - Contributors/Developers
+        - Maintainers
+        - DevOps/Operators
+        - All Audiences
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other relevant information
+      placeholder: Screenshots, examples, related documentation
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Would you like to contribute this fix?
+      options:
+        - label: I would like to submit a PR to fix this documentation issue
+          required: false

@@ -1,7 +1,10 @@
 name: 🐛 Bug Report
-description: Create a report to help us improve
-title: '[Bug]: '
-labels: ['bug', 'triage']
+description: Report a bug to help us improve
+title: '[Bug] '
+labels: ['bug', 'needs-triage']
+assignees:
+  - jsamuelsen
+
 body:
   - type: markdown
     attributes:
@@ -9,65 +12,173 @@ body:
         Thanks for taking the time to fill out this bug report!
 
   - type: textarea
-    id: what-happened
+    id: description
     attributes:
-      label: What happened?
-      description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see!
+      label: Bug Description
+      description: A clear description of what the bug is
+      placeholder: What went wrong?
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: Describe the expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: Describe what actually occurred
     validations:
       required: true
 
   - type: textarea
     id: steps-to-reproduce
     attributes:
-      label: Steps to reproduce
-      description: What steps can we follow to reproduce this issue?
+      label: Steps to Reproduce
+      description: How can we reproduce this issue?
       placeholder: |
-        1. Go to '...'
+        1. Navigate to '...'
         2. Click on '...'
-        3. Scroll down to '...'
-        4. See error
+        3. Enter '...'
+        4. Observe error
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component/Area
+      description: Which part of the application is affected?
+      options:
+        - Authentication/Login
+        - User Management
+        - Recipe Management
+        - Dashboard/Home
+        - Settings/Configuration
+        - Navigation/Routing
+        - API Integration
+        - SSR (Server-Side Rendering)
+        - Theming/Dark Mode
+        - Forms/Validation
+        - Search/Filtering
+        - Build/Deploy
+        - Other
+      multiple: true
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How severe is this bug?
+      options:
+        - Critical (app broken/unusable)
+        - High (major functionality affected)
+        - Medium (feature impaired)
+        - Low (minor issue/cosmetic)
     validations:
       required: true
 
   - type: dropdown
     id: browsers
     attributes:
-      label: What browsers are you seeing the problem on?
+      label: Browser(s)
+      description: Which browser(s) experience this issue?
       multiple: true
       options:
-        - Firefox
         - Chrome
+        - Firefox
         - Safari
-        - Microsoft Edge
+        - Edge
+        - Mobile Safari (iOS)
+        - Mobile Chrome (Android)
         - Other
-
-  - type: textarea
-    id: environment
-    attributes:
-      label: Environment
-      description: |
-        Please provide information about your environment:
-      value: |
-        - OS: [e.g. macOS, Windows, Linux]
-        - Browser: [e.g. Chrome 118, Safari 17]
-        - Node version: [e.g. 20.8.0]
-        - Angular version: [e.g. 20.3.0]
     validations:
       required: true
 
   - type: textarea
-    id: logs
+    id: environment
     attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      label: Environment Details
+      description: Details about your environment
+      value: |
+        - OS: [e.g. macOS 14.0, Windows 11, Ubuntu 22.04]
+        - Browser Version: [e.g. Chrome 120, Safari 17.2]
+        - Node.js Version: [e.g. 20.10.0]
+        - Angular Version: [e.g. 20.3.3]
+        - Device: [e.g. Desktop, iPhone 14, Samsung Galaxy]
+        - Screen Resolution: [e.g. 1920x1080, mobile 375x667]
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: console-errors
+    attributes:
+      label: Console Errors/Logs
+      description: Browser console errors or relevant log output (redact any sensitive data)
       render: shell
+      placeholder: |
+        Paste console errors or logs here
+    validations:
+      required: false
+
+  - type: textarea
+    id: network-errors
+    attributes:
+      label: Network Errors
+      description: Any failed API requests or network errors from DevTools
+      placeholder: |
+        - Request: GET /api/recipes
+        - Status: 500
+        - Error: Internal Server Error
+    validations:
+      required: false
 
   - type: checkboxes
-    id: terms
+    id: security-impact
     attributes:
-      label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      label: Security Impact
+      description: Could this bug have security implications?
       options:
+        - label: This bug does NOT have security implications
+          required: false
+        - label: This bug MAY have security implications (if yes, consider reporting via Security Advisories)
+          required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots/Videos
+      description: Add screenshots or videos to help explain the problem
+      placeholder: Drag and drop images or paste image URLs
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem
+      placeholder: Additional information that might help us fix this bug
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description: Pre-submission checklist
+      options:
+        - label: I have searched existing issues to ensure this isn't a duplicate
+          required: true
+        - label: I have provided all requested information
+          required: true
         - label: I agree to follow this project's Code of Conduct
           required: true

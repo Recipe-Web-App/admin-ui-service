@@ -1,144 +1,214 @@
+# Label Configuration for Recipe Admin UI Service
+# Enhanced label strategy for comprehensive issue and PR management
+
+# Core Type Labels
 - name: 'bug'
   color: 'd73a4a'
   description: "Something isn't working"
-
-- name: 'documentation'
-  color: '0075ca'
-  description: 'Improvements or additions to documentation'
-
-- name: 'duplicate'
-  color: 'cfd3d7'
-  description: 'This issue or pull request already exists'
 
 - name: 'enhancement'
   color: 'a2eeef'
   description: 'New feature or request'
 
-- name: 'good first issue'
-  color: '7057ff'
-  description: 'Good for newcomers'
+- name: 'documentation'
+  color: '0075ca'
+  description: 'Improvements or additions to documentation'
 
-- name: 'help wanted'
-  color: '008672'
-  description: 'Extra attention is needed'
+- name: 'performance'
+  color: 'f9d0c4'
+  description: 'Performance improvements'
 
-- name: 'invalid'
-  color: 'e4e669'
-  description: "This doesn't seem right"
+- name: 'security'
+  color: 'b60205'
+  description: 'Security-related issues'
 
-- name: 'question'
-  color: 'd876e3'
-  description: 'Further information is requested'
-
-- name: 'wontfix'
-  color: 'ffffff'
-  description: 'This will not be worked on'
-
-# Priority labels
-- name: 'priority: low'
-  color: '0e8a16'
-  description: 'Low priority issue'
-
-- name: 'priority: medium'
+- name: 'refactor'
   color: 'fbca04'
-  description: 'Medium priority issue'
+  description: 'Code refactoring'
+
+# Priority Labels
+- name: 'priority: critical'
+  color: 'b60205'
+  description: 'Critical priority - requires immediate attention'
 
 - name: 'priority: high'
   color: 'd93f0b'
-  description: 'High priority issue'
+  description: 'High priority'
 
-- name: 'priority: critical'
-  color: 'b60205'
-  description: 'Critical priority issue'
-
-# Type labels
-- name: 'type: feature'
-  color: '1d76db'
-  description: 'New feature implementation'
-
-- name: 'type: bugfix'
-  color: 'ee0701'
-  description: 'Bug fix'
-
-- name: 'type: improvement'
-  color: '5319e7'
-  description: 'Enhancement to existing functionality'
-
-- name: 'type: refactor'
-  color: 'e99695'
-  description: 'Code refactoring'
-
-- name: 'type: security'
-  color: 'b60205'
-  description: 'Security related issue'
-
-- name: 'type: performance'
-  color: '0052cc'
-  description: 'Performance improvement'
-
-- name: 'type: test'
-  color: '1f7a1f'
-  description: 'Testing related changes'
-
-- name: 'type: ci'
-  color: '006b75'
-  description: 'CI/CD related changes'
-
-- name: 'type: dependencies'
-  color: '0366d6'
-  description: 'Dependency updates'
-
-# Area labels
-- name: 'area: frontend'
-  color: 'c2e0c6'
-  description: 'Frontend/UI related'
-
-- name: 'area: backend'
-  color: 'fef2c0'
-  description: 'Backend/API related'
-
-- name: 'area: auth'
-  color: 'f9d0c4'
-  description: 'Authentication and authorization'
-
-- name: 'area: build'
-  color: 'd4c5f9'
-  description: 'Build system and tooling'
-
-- name: 'area: docs'
-  color: 'c5def5'
-  description: 'Documentation related'
-
-# Status labels
-- name: 'status: needs review'
+- name: 'priority: medium'
   color: 'fbca04'
-  description: 'Awaiting code review'
+  description: 'Medium priority'
 
-- name: 'status: needs testing'
+- name: 'priority: low'
   color: '0e8a16'
-  description: 'Needs testing before merge'
+  description: 'Low priority'
 
-- name: 'status: blocked'
-  color: 'd93f0b'
-  description: 'Blocked by another issue or dependency'
+# Status Labels
+- name: 'needs-triage'
+  color: 'ededed'
+  description: 'Needs initial review and triage'
 
-- name: 'status: in progress'
+- name: 'needs-reproduction'
+  color: 'fef2c0'
+  description: 'Cannot reproduce issue'
+
+- name: 'needs-info'
+  color: 'd876e3'
+  description: 'More information needed'
+
+- name: 'in-progress'
   color: '0052cc'
-  description: 'Currently being worked on'
+  description: 'Work in progress'
 
-- name: 'status: ready'
-  color: '0e8a16'
-  description: 'Ready to be worked on'
-
-# Special labels
-- name: 'breaking change'
+- name: 'blocked'
   color: 'b60205'
-  description: 'Introduces breaking changes'
+  description: 'Blocked by external dependency'
 
-- name: 'needs design'
+- name: 'stale'
+  color: 'ededed'
+  description: 'No recent activity'
+
+- name: 'wont-fix'
+  color: 'ffffff'
+  description: 'Will not be fixed'
+
+- name: 'duplicate'
+  color: 'cfd3d7'
+  description: 'Duplicate of another issue'
+
+# Component Labels
+- name: 'authentication'
+  color: '5319e7'
+  description: 'Authentication/login related'
+
+- name: 'api'
+  color: '1d76db'
+  description: 'API integration'
+
+- name: 'ui'
+  color: 'c5def5'
+  description: 'User interface'
+
+- name: 'core'
+  color: 'bfdadc'
+  description: 'Core functionality'
+
+- name: 'shared'
+  color: 'c2e0c6'
+  description: 'Shared components/utilities'
+
+- name: 'features'
+  color: 'd4c5f9'
+  description: 'Feature modules'
+
+- name: 'layout'
   color: 'e99695'
-  description: 'Needs design input'
+  description: 'Layout components'
+
+- name: 'testing'
+  color: '0e8a16'
+  description: 'Testing related'
+
+- name: 'tests'
+  color: '1f7a1f'
+  description: 'Test changes'
+
+# Tech Stack Labels
+- name: 'angular'
+  color: 'dd0031'
+  description: 'Angular framework'
+
+- name: 'typescript'
+  color: '3178c6'
+  description: 'TypeScript language'
+
+- name: 'javascript'
+  color: 'f1e05a'
+  description: 'JavaScript'
+
+- name: 'html'
+  color: 'e34c26'
+  description: 'HTML templates'
+
+- name: 'styles'
+  color: '563d7c'
+  description: 'CSS/SCSS/Styling'
+
+- name: 'docker'
+  color: '0db7ed'
+  description: 'Docker related'
+
+- name: 'kubernetes'
+  color: '326ce5'
+  description: 'Kubernetes deployment'
+
+# Special Labels
+- name: 'good-first-issue'
+  color: '7057ff'
+  description: 'Good for newcomers'
+
+- name: 'help-wanted'
+  color: '008672'
+  description: 'Extra attention needed'
 
 - name: 'dependencies'
   color: '0366d6'
-  description: 'Pull requests that update a dependency file'
+  description: 'Dependency updates'
+
+- name: 'github-actions'
+  color: '2088ff'
+  description: 'GitHub Actions workflows'
+
+- name: 'github'
+  color: 'fbca04'
+  description: 'GitHub configuration'
+
+- name: 'breaking-change'
+  color: 'd73a4a'
+  description: 'Contains breaking changes'
+
+- name: 'pinned'
+  color: 'fef2c0'
+  description: "Pinned issue - won't go stale"
+
+- name: 'work-in-progress'
+  color: 'fbca04'
+  description: 'Work in progress - do not merge'
+
+# Area Labels
+- name: 'build-tools'
+  color: 'bfd4f2'
+  description: 'Build tools and configuration'
+
+- name: 'linting'
+  color: 'd1f0fd'
+  description: 'Linting and code quality'
+
+- name: 'configuration'
+  color: 'c5def5'
+  description: 'Configuration files'
+
+- name: 'accessibility'
+  color: '0e8a16'
+  description: 'Accessibility improvements'
+
+- name: 'mobile'
+  color: '5319e7'
+  description: 'Mobile/responsive design'
+
+- name: 'ssr'
+  color: '1d76db'
+  description: 'Server-side rendering'
+
+# Discussion Labels
+- name: 'idea'
+  color: 'a2eeef'
+  description: 'New idea or suggestion'
+
+- name: 'question'
+  color: 'd876e3'
+  description: 'Further information requested'
+
+- name: 'show-and-tell'
+  color: '0e8a16'
+  description: 'Community showcase'
