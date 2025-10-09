@@ -1,0 +1,172 @@
+name: ⚡ Performance Issue
+description: Report performance degradation or optimization opportunities
+title: '[Performance] '
+labels: ['performance', 'needs-triage']
+assignees:
+  - jsamuelsen11
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a performance issue! Please provide as much detail as possible.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Performance Issue Description
+      description: Describe the performance problem
+      placeholder: What performance issue did you observe?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: affected-component
+    attributes:
+      label: Affected Component
+      description: Which part of the application has the performance issue?
+      options:
+        - Initial Page Load
+        - Route Navigation
+        - Component Rendering
+        - API Requests
+        - State Management
+        - Animation/Transitions
+        - Bundle Size
+        - Memory Usage
+        - SSR Performance
+        - Build Time
+        - Other
+      multiple: true
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Impact Severity
+      description: How much does this affect the user experience?
+      options:
+        - Critical (app unusable)
+        - High (significant degradation)
+        - Medium (noticeable but tolerable)
+        - Low (minor optimization opportunity)
+    validations:
+      required: true
+
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Performance Metrics
+      description: Provide actual performance measurements
+      placeholder: |
+        - Load Time: 5.2 seconds (expected: < 2 seconds)
+        - First Contentful Paint: 3.1s
+        - Time to Interactive: 4.8s
+        - Largest Contentful Paint: 4.2s
+        - Bundle Size: 2.5MB (expected: < 1MB)
+        - Memory Usage: 450MB
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this performance issue?
+      placeholder: |
+        1. Navigate to...
+        2. Perform action...
+        3. Observe slow performance...
+    validations:
+      required: true
+
+  - type: textarea
+    id: load-characteristics
+    attributes:
+      label: Load Characteristics
+      description: Describe the conditions when this occurs
+      placeholder: |
+        - Number of items: 1000 recipes
+        - Data size: 5MB
+        - Concurrent requests: 10
+        - User actions: Rapid scrolling
+    validations:
+      required: false
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      description: Which browser(s) experience this issue?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Multiple browsers
+        - All browsers
+      multiple: true
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment Details
+      description: Details about your environment
+      placeholder: |
+        - OS: macOS 14.0
+        - Browser Version: Chrome 120
+        - Device: MacBook Pro M2
+        - Network: 4G/WiFi/Cable
+        - Device CPU: 10-core
+        - Device RAM: 16GB
+    validations:
+      required: true
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration
+      description: Relevant configuration details
+      placeholder: |
+        - Build mode: production/development
+        - SSR: enabled/disabled
+        - Service worker: active
+        - Cache: enabled
+    validations:
+      required: false
+
+  - type: textarea
+    id: profiling
+    attributes:
+      label: Profiling Data
+      description: Chrome DevTools performance profile, Lighthouse report, or bundle analyzer output
+      placeholder: |
+        - Lighthouse Score: 65/100
+        - Main thread blocking: 2.1s
+        - Bundle analyzer: lucide-angular (800KB)
+        - Chrome DevTools profile: [attach screenshot]
+    validations:
+      required: false
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: Do you have ideas for optimization?
+      placeholder: |
+        - Lazy load heavy components
+        - Implement virtual scrolling
+        - Optimize bundle with tree-shaking
+        - Add caching layer
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other relevant information
+      placeholder: Screenshots, videos, comparison with expected performance

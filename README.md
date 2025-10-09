@@ -5,13 +5,14 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A modern Angular 20 admin dashboard for recipe management with server-side rendering (SSR) support.
-Built with PrimeNG v20, TailwindCSS v3.4, and comprehensive development tooling.
+Built with PrimeNG v20, TailwindCSS v4, and comprehensive development tooling.
 
 ## ✨ Features
 
 - **Modern Angular 20** with SSR support
 - **PrimeNG v20** UI component library with theming
-- **TailwindCSS v3.4** for responsive, utility-first styling
+- **TailwindCSS v4** for responsive, utility-first styling
+- **Lucide Angular** for modern icon components
 - **OAuth2/OIDC** authentication with PKCE
 - **Dark/Light mode** theming support
 - **Signal-based** state management
@@ -128,7 +129,7 @@ npm run serve:ssr:admin-ui-service
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guidelines](.github/CONTRIBUTING.md) for details.
 
 ### Development Process
 
@@ -142,7 +143,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 ## 🔒 Security
 
-Security is a top priority. Please see our [Security Policy](SECURITY.md) for reporting vulnerabilities.
+Security is a top priority. Please see our [Security Policy](.github/SECURITY.md) for reporting vulnerabilities.
 
 ## 📄 License
 
@@ -152,7 +153,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Framework**: Angular 20 with SSR
 - **UI Library**: PrimeNG v20
-- **Styling**: TailwindCSS v3.4
+- **Styling**: TailwindCSS v4
+- **Icons**: Lucide Angular
 - **Authentication**: angular-oauth2-oidc
 - **State Management**: Angular Signals with TanStack Query
 - **Testing**: Vitest, Playwright, Karma/Jasmine

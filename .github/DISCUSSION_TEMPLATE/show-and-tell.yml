@@ -1,0 +1,57 @@
+labels: ['show-and-tell']
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share what you've built with the admin UI service!
+
+  - type: textarea
+    id: what-you-built
+    attributes:
+      label: What Did You Build?
+      description: Describe your project or integration
+      placeholder: I built...
+    validations:
+      required: true
+
+  - type: textarea
+    id: how-using
+    attributes:
+      label: How Are You Using the Admin UI?
+      description: How have you integrated or extended the admin UI service?
+      placeholder: |
+        - Integrated with...
+        - Added custom features...
+        - Modified to support...
+    validations:
+      required: true
+
+  - type: textarea
+    id: challenges
+    attributes:
+      label: Interesting Challenges or Solutions
+      description: Share any interesting problems you solved or techniques you used
+      placeholder: One interesting challenge was...
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots-demo
+    attributes:
+      label: Screenshots or Demo
+      description: Share screenshots, links, or videos
+      placeholder: |
+        ![Screenshot](url)
+        Demo: https://...
+    validations:
+      required: false
+
+  - type: textarea
+    id: feedback
+    attributes:
+      label: Feedback for the Project
+      description: Any feedback or suggestions based on your experience?
+      placeholder: It would be great if...
+    validations:
+      required: false

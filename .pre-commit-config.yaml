@@ -2,6 +2,35 @@
 # Enterprise-grade validation with minimal local hooks
 # Uses proper pre-commit repositories wherever possible
 
+# Pre-commit.ci configuration
+ci:
+  autofix_commit_msg: |
+    chore(pre-commit-ci): auto fixes from pre-commit hooks
+
+    for more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: 'chore(pre-commit.ci): pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip:
+    # Skip all local hooks - these require Node.js/npm and other system dependencies
+    - prettier
+    - typescript-check
+    - stylelint
+    - markdownlint
+    - trivy-config
+    - commitlint
+    - npm-audit
+    - madge-circular
+    - license-check
+    - kubeval
+    - conftest
+    - kube-score
+    - test-coverage
+    - angular-lint
+    - angular-build-check
+  submodules: false
+
 repos:
   # Built-in hooks for basic validations
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -86,7 +115,7 @@ repos:
 
   # Enhanced secret detection
   - repo: https://github.com/trufflesecurity/trufflehog
-    rev: v3.90.6
+    rev: v3.90.8
     hooks:
       - id: trufflehog
         name: TruffleHog Secret Detection
@@ -106,7 +135,7 @@ repos:
 
   # Docker security scanning
   - repo: https://github.com/hadolint/hadolint
-    rev: v2.13.1
+    rev: v2.14.0
     hooks:
       - id: hadolint-docker
         files: Dockerfile.*

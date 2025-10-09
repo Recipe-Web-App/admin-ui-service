@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial Angular 20 project setup with SSR support
 - PrimeNG v20 integration for UI components
-- TailwindCSS v3.4 for styling with PrimeNG theme integration
+- TailwindCSS v4 for styling with PrimeNG theme integration
 - Comprehensive development tooling (ESLint, Prettier, Stylelint)
 - Pre-commit hooks with security scanning and code quality checks
 - GitHub Actions workflows for CI/CD
@@ -45,5 +45,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Repository foundation setup
 - Development environment configuration
 
-[Unreleased]: https://github.com/username/recipe-web-app/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/username/recipe-web-app/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Recipe-Web-App/admin-ui-service/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Recipe-Web-App/admin-ui-service/releases/tag/v0.1.0

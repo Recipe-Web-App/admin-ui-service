@@ -1,0 +1,41 @@
+labels: ['idea']
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share your ideas for new features or improvements!
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your Idea
+      description: Describe your idea for the admin UI service
+      placeholder: What's your idea?
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Use Case
+      description: What problem does this solve or what use case does it enable?
+      placeholder: This would help with...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you implement this?
+      placeholder: We could...
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other context, examples, or screenshots
+      placeholder: For example...

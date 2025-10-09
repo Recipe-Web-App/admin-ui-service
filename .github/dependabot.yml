@@ -1,55 +1,131 @@
+---
 version: 2
 updates:
-  # Enable version updates for npm dependencies
+  # npm dependencies
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
       interval: 'weekly'
       day: 'monday'
       time: '09:00'
+      timezone: 'US/Eastern'
     open-pull-requests-limit: 100
-    reviewers:
-      - 'Recipe-Web-App/maintainers'
     assignees:
-      - 'Recipe-Web-App/maintainers'
+      - 'jsamuelsen11'
     commit-message:
-      prefix: 'chore(deps)'
+      prefix: 'deps'
+      prefix-development: 'deps-dev'
       include: 'scope'
+    labels:
+      - 'dependencies'
+      - 'javascript'
     groups:
-      angular:
+      # Group production dependencies by update type
+      production-minor-patch:
+        dependency-type: 'production'
+        update-types:
+          - 'minor'
+          - 'patch'
+
+      # Group development dependencies by update type
+      development-minor-patch:
+        dependency-type: 'development'
+        update-types:
+          - 'minor'
+          - 'patch'
+
+      # Group Angular packages together (major versions handled separately)
+      angular-packages:
         patterns:
           - '@angular/*'
-      testing:
+        update-types:
+          - 'minor'
+          - 'patch'
+
+      # Group testing frameworks
+      testing-tools:
         patterns:
           - '@playwright/*'
           - '@vitest/*'
           - 'vitest'
           - 'jasmine*'
           - 'karma*'
-      linting:
+          - '@types/jasmine'
+        update-types:
+          - 'minor'
+          - 'patch'
+
+      # Group linting and formatting tools
+      linting-tools:
         patterns:
           - 'eslint*'
           - 'prettier'
           - 'stylelint*'
+          - '*eslint*'
+        update-types:
+          - 'minor'
+          - 'patch'
+
+      # Group build tools
       build-tools:
         patterns:
           - '@tailwindcss/*'
           - 'tailwindcss'
           - 'postcss'
           - 'autoprefixer'
+          - 'typescript'
+          - 'typescript-eslint'
+        update-types:
+          - 'minor'
+          - 'patch'
+    versioning-strategy: increase
+    rebase-strategy: auto
     ignore:
-      # Ignore major version updates for Angular during development
+      # Don't auto-update major Angular versions - require manual review
       - dependency-name: '@angular/*'
         update-types: ['version-update:semver-major']
+      # Don't auto-update Node.js major versions
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
 
-  # Enable version updates for GitHub Actions
+  # GitHub Actions
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'monthly'
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'US/Eastern'
     open-pull-requests-limit: 100
-    reviewers:
-      - 'Recipe-Web-App/maintainers'
+    assignees:
+      - 'jsamuelsen11'
     commit-message:
       prefix: 'ci'
       include: 'scope'
+    labels:
+      - 'dependencies'
+      - 'github-actions'
+    groups:
+      github-actions:
+        patterns:
+          - '*'
+    rebase-strategy: auto
+
+  # Docker
+  - package-ecosystem: 'docker'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'US/Eastern'
+    open-pull-requests-limit: 100
+    assignees:
+      - 'jsamuelsen11'
+    commit-message:
+      prefix: 'docker'
+      include: 'scope'
+    labels:
+      - 'dependencies'
+      - 'docker'
+    rebase-strategy: auto

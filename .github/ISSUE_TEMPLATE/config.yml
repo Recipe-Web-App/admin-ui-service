@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔒 Security Vulnerability
+    url: https://github.com/Recipe-Web-App/admin-ui-service/security/advisories/new
+    about: Please report security vulnerabilities through GitHub Security Advisories
+  - name: 💬 Discussion Forum
+    url: https://github.com/Recipe-Web-App/admin-ui-service/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 📖 Documentation
+    url: https://github.com/Recipe-Web-App/admin-ui-service/blob/main/README.md
+    about: View comprehensive documentation and guides
+  - name: 📋 Technical Specification
+    url: https://github.com/Recipe-Web-App/admin-ui-service/blob/main/.github/TECHNICAL_SPEC.md
+    about: View detailed technical specifications
