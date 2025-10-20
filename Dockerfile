@@ -9,7 +9,7 @@ ARG BUILD_DATE
 ARG VCS_REF
 
 # Stage 1: Dependencies
-FROM node:24-alpine AS deps
+FROM node:25-alpine AS deps
 LABEL stage=deps \
       org.opencontainers.image.title="Admin UI Service - Dependencies" \
       org.opencontainers.image.description="Dependencies stage for Admin UI Service" \
@@ -48,7 +48,7 @@ RUN npm ci --only=production --frozen-lockfile --audit=false --fund=false && \
 RUN rm -f package*.json
 
 # Stage 2: Builder
-FROM node:24-alpine AS builder
+FROM node:25-alpine AS builder
 LABEL stage=builder \
       org.opencontainers.image.title="Admin UI Service - Builder" \
       org.opencontainers.image.description="Build stage for Admin UI Service" \
@@ -112,7 +112,7 @@ RUN apk add --no-cache \
 RUN npm audit --production --audit-level=high || true
 
 # Stage 4: Final Runtime
-FROM node:24-alpine AS runner
+FROM node:25-alpine AS runner
 LABEL stage=runner \
       org.opencontainers.image.title="Admin UI Service" \
       org.opencontainers.image.description="Production-ready Admin UI Service" \
