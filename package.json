@@ -95,7 +95,7 @@
     "@types/express": "^5.0.4",
     "@types/jasmine": "~5.1.12",
     "@types/node": "^24.9.1",
-    "@vitest/ui": "^3.2.4",
+    "@vitest/ui": "^4.0.4",
     "angular-eslint": "20.5.0",
     "autoprefixer": "^10.4.21",
     "dotenv": "^17.2.3",
