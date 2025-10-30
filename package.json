@@ -69,7 +69,6 @@
     "@angular/ssr": "^20.3.6",
     "@primeng/themes": "^20.2.0",
     "@tanstack/angular-query-experimental": "^5.90.7",
-    "@types/uuid": "^11.0.0",
     "angular-oauth2-oidc": "^20.0.2",
     "express": "^5.1.0",
     "http-status-codes": "^2.3.0",
@@ -91,11 +90,12 @@
     "@commitlint/config-conventional": "^20.0.0",
     "@playwright/test": "^1.56.1",
     "@tailwindcss/forms": "^0.5.10",
+    "@tailwindcss/postcss": "^4.1.16",
     "@tailwindcss/typography": "^0.5.19",
     "@types/express": "^5.0.4",
     "@types/jasmine": "~5.1.12",
     "@types/node": "^24.9.1",
-    "@vitest/ui": "^4.0.4",
+    "@vitest/ui": "^3.2.4",
     "angular-eslint": "20.5.0",
     "autoprefixer": "^10.4.21",
     "dotenv": "^17.2.3",
@@ -118,6 +118,6 @@
     "tailwindcss": "^4.1.16",
     "typescript": "~5.9.3",
     "typescript-eslint": "8.46.2",
-    "vitest": "^4.0.4"
+    "vitest": "^3.2.4"
   }
 }

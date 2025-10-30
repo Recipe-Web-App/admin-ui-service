@@ -11,7 +11,9 @@
           "config",
           "variants",
           "responsive",
-          "screen"
+          "screen",
+          "theme",
+          "source"
         ]
       }
     ],
