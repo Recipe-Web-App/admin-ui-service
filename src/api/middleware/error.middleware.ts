@@ -43,8 +43,8 @@ export function errorHandler(
   }
 
   if (err instanceof ZodError) {
-    const errors = err.errors.reduce(
-      (acc, error) => {
+    const errors = err.issues.reduce(
+      (acc: Record<string, string>, error) => {
         const path = error.path.join('.');
         acc[path] = error.message;
         return acc;

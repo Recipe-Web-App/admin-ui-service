@@ -21,8 +21,8 @@ export function validate(schema: ZodSchema) {
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const errors = error.errors.reduce(
-          (acc, err) => {
+        const errors = error.issues.reduce(
+          (acc: Record<string, string>, err) => {
             const path = err.path.join('.');
             acc[path] = err.message;
             return acc;
@@ -63,7 +63,7 @@ export function validateBody(schema: ZodSchema) {
 export function validateQuery(schema: ZodSchema) {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {
-      req.query = schema.parse(req.query);
+      req.query = schema.parse(req.query) as typeof req.query;
       next();
     } catch (error) {
       if (error instanceof ZodError) {
@@ -80,8 +80,8 @@ export function validateQuery(schema: ZodSchema) {
  * Format Zod errors for response
  */
 function formatZodErrors(error: ZodError): Record<string, string> {
-  return error.errors.reduce(
-    (acc, err) => {
+  return error.issues.reduce(
+    (acc: Record<string, string>, err) => {
       const path = err.path.join('.');
       acc[path] = err.message;
       return acc;
