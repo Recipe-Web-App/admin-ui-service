@@ -83,23 +83,23 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
-    "@angular/build": "^20.3.8",
-    "@angular/cli": "^20.3.8",
-    "@angular/compiler-cli": "^20.3.9",
+    "@angular/build": "^20.3.9",
+    "@angular/cli": "^20.3.9",
+    "@angular/compiler-cli": "^20.3.10",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@playwright/test": "^1.56.1",
     "@tailwindcss/forms": "^0.5.10",
-    "@tailwindcss/postcss": "^4.1.16",
+    "@tailwindcss/postcss": "^4.1.17",
     "@tailwindcss/typography": "^0.5.19",
     "@types/express": "^5.0.5",
     "@types/jasmine": "~5.1.12",
     "@types/node": "^24.10.0",
     "@vitest/ui": "^3.2.4",
-    "angular-eslint": "20.5.1",
+    "angular-eslint": "20.6.0",
     "autoprefixer": "^10.4.21",
     "dotenv": "^17.2.3",
-    "eslint": "^9.39.0",
+    "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "jasmine-core": "~5.12.1",
@@ -117,7 +117,7 @@
     "stylelint-config-standard": "^39.0.1",
     "tailwindcss": "^4.1.16",
     "typescript": "~5.9.3",
-    "typescript-eslint": "8.46.2",
+    "typescript-eslint": "8.46.3",
     "vitest": "^3.2.4"
   }
 }
