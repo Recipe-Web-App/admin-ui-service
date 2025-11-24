@@ -83,9 +83,9 @@
     "zone.js": "~0.16.0"
   },
   "devDependencies": {
-    "@angular/build": "^20.3.9",
-    "@angular/cli": "^20.3.9",
-    "@angular/compiler-cli": "^20.3.10",
+    "@angular/build": "^20.3.11",
+    "@angular/cli": "^20.3.11",
+    "@angular/compiler-cli": "^20.3.13",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@playwright/test": "^1.56.1",
@@ -93,8 +93,8 @@
     "@tailwindcss/postcss": "^4.1.17",
     "@tailwindcss/typography": "^0.5.19",
     "@types/express": "^5.0.5",
-    "@types/jasmine": "~5.1.12",
-    "@types/node": "^24.10.0",
+    "@types/jasmine": "~5.1.13",
+    "@types/node": "^24.10.1",
     "@vitest/ui": "^3.2.4",
     "angular-eslint": "20.6.0",
     "autoprefixer": "^10.4.22",
@@ -110,14 +110,14 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "license-checker": "^25.0.1",
     "madge": "^8.0.0",
-    "markdownlint-cli": "^0.45.0",
+    "markdownlint-cli": "^0.46.0",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
-    "stylelint": "^16.25.0",
+    "stylelint": "^16.26.0",
     "stylelint-config-standard": "^39.0.1",
     "tailwindcss": "^4.1.16",
     "typescript": "~5.9.3",
-    "typescript-eslint": "8.46.4",
+    "typescript-eslint": "8.48.0",
     "vitest": "^3.2.4"
   }
 }
