@@ -55,4 +55,4 @@ kubectl wait --namespace="$NAMESPACE" \
 
 print_separator "="
 print_status "ok" "Admin UI Service is now running"
-echo -e "${CYAN}🌍 Access at: http://admin-ui.local${NC}"
+echo -e "${CYAN}🌍 Access at: http://sous-chef-proxy.local${NC}"

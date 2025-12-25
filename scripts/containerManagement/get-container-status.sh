@@ -169,17 +169,17 @@ if command_exists minikube && minikube status >/dev/null 2>&1; then
         echo -e "${PURPLE}🔍 Testing all health endpoints...${NC}"
 
         # Test main health endpoint
-        test_endpoint "http://admin-ui.local/api/health" "General Health Endpoint" 5
+        test_endpoint "http://sous-chef-proxy.local/api/v1/admin-ui/health" "General Health Endpoint" 5
 
         # Test readiness endpoint
-        test_endpoint "http://admin-ui.local/api/health/ready" "Readiness Probe" 3
+        test_endpoint "http://sous-chef-proxy.local/api/v1/admin-ui/health/ready" "Readiness Probe" 3
 
         # Test liveness endpoint
-        test_endpoint "http://admin-ui.local/api/health/live" "Liveness Probe" 3
+        test_endpoint "http://sous-chef-proxy.local/api/v1/admin-ui/health/live" "Liveness Probe" 3
 
         echo ""
         echo -e "${PURPLE}📊 Detailed Health Analysis:${NC}"
-        HEALTH_DATA=$(get_health_data "http://admin-ui.local/api/health")
+        HEALTH_DATA=$(get_health_data "http://sous-chef-proxy.local/api/v1/admin-ui/health")
         if [ "$HEALTH_DATA" != "{}" ]; then
             echo "$HEALTH_DATA" | jq -r '
                 "  🕐 Uptime: " + (.uptime // "unknown"),
@@ -278,15 +278,15 @@ if command_exists minikube && minikube status >/dev/null 2>&1; then
     echo -e "${BLUE}  Testing key application routes...${NC}"
 
     # Test homepage
-    test_endpoint "http://admin-ui.local/" "Homepage" 10
+    test_endpoint "http://sous-chef-proxy.local/" "Homepage" 10
 
     # Test API routes
-    test_endpoint "http://admin-ui.local/api/health" "Health API" 5
+    test_endpoint "http://sous-chef-proxy.local/api/v1/admin-ui/health" "Health API" 5
 
     echo ""
     echo -e "${BLUE}  Testing static asset availability...${NC}"
     if command_exists curl; then
-        STATIC_TEST=$(curl -s -I -m 3 "http://admin-ui.local/_next/static/" 2>/dev/null | head -1 || echo "")
+        STATIC_TEST=$(curl -s -I -m 3 "http://sous-chef-proxy.local/_next/static/" 2>/dev/null | head -1 || echo "")
         if echo "$STATIC_TEST" | grep -q "200\|403\|404"; then
             print_status "ok" "Static asset server responding"
         else
@@ -355,7 +355,7 @@ print_separator
 echo ""
 echo -e "${CYAN}📈 Performance & Memory Analysis:${NC}"
 if command_exists minikube && minikube status >/dev/null 2>&1; then
-    HEALTH_DATA=$(get_health_data "http://admin-ui.local/api/health")
+    HEALTH_DATA=$(get_health_data "http://sous-chef-proxy.local/api/v1/admin-ui/health")
 
     if [ "$HEALTH_DATA" != "{}" ]; then
         echo -e "${BLUE}  Angular Performance Metrics:${NC}"
@@ -389,15 +389,15 @@ if command_exists minikube && minikube status >/dev/null 2>&1; then
     MINIKUBE_IP=$(minikube ip 2>/dev/null || echo "unknown")
     echo "🔗 Minikube IP: $MINIKUBE_IP"
 
-    if grep -q "admin-ui.local" /etc/hosts 2>/dev/null; then
-        print_status "ok" "/etc/hosts entry exists for admin-ui.local"
+    if grep -q "sous-chef-proxy.local" /etc/hosts 2>/dev/null; then
+        print_status "ok" "/etc/hosts entry exists for sous-chef-proxy.local"
         echo "🌍 Application URLs:"
-        echo "   • Frontend: http://admin-ui.local/"
-        echo "   • Health: http://admin-ui.local/api/health"
-        echo "   • Ready: http://admin-ui.local/api/health/ready"
-        echo "   • Live: http://admin-ui.local/api/health/live"
+        echo "   • Frontend: http://sous-chef-proxy.local/"
+        echo "   • Health: http://sous-chef-proxy.local/api/v1/admin-ui/health"
+        echo "   • Ready: http://sous-chef-proxy.local/api/v1/admin-ui/health/ready"
+        echo "   • Live: http://sous-chef-proxy.local/api/v1/admin-ui/health/live"
     else
-        print_status "warning" "/etc/hosts entry missing. Add: $MINIKUBE_IP admin-ui.local"
+        print_status "warning" "/etc/hosts entry missing. Add: $MINIKUBE_IP sous-chef-proxy.local"
     fi
 fi
 

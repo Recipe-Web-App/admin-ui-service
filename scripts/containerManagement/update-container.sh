@@ -88,6 +88,11 @@ envsubst < "k8s/secret-template.yaml" | kubectl apply -f -
 print_status "ok" "Secret updated"
 
 print_separator
+echo -e "${CYAN}📥 Applying Gateway HTTPRoute...${NC}"
+kubectl apply -f "k8s/gateway-route.yaml"
+print_status "ok" "Gateway HTTPRoute applied"
+
+print_separator
 echo -e "${CYAN}🔄 Rolling out deployment update...${NC}"
 kubectl apply -f "k8s/deployment.yaml"
 kubectl rollout restart deployment/admin-ui-service -n "$NAMESPACE"
@@ -105,7 +110,7 @@ kubectl wait --namespace="$NAMESPACE" \
 
 print_separator "="
 print_status "ok" "Admin UI Service updated successfully!"
-echo -e "${CYAN}🌍 Access at: http://admin-ui.local${NC}"
+echo -e "${CYAN}🌍 Access at: http://sous-chef-proxy.local${NC}"
 
 # Show current status
 print_separator
