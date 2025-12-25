@@ -57,7 +57,7 @@ export const authConfig: Record<string, AuthConfig> = {
   },
 
   production: {
-    issuer: 'https://auth-service.local/api/v1/auth',
+    issuer: 'https://sous-chef-proxy.local/api/v1/auth',
     scope: ['openid', 'profile', 'email', 'admin'],
     responseType: 'code',
     redirectUri: 'https://admin.recipe-app.com/auth/callback',
