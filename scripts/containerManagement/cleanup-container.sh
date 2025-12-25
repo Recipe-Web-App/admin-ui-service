@@ -56,9 +56,9 @@ kubectl delete service admin-ui-service -n "$NAMESPACE" --ignore-not-found
 print_status "ok" "Service deletion completed"
 
 print_separator
-echo -e "${CYAN}📥 Deleting ingress...${NC}"
-kubectl delete ingress admin-ui-ingress -n "$NAMESPACE" --ignore-not-found
-print_status "ok" "Ingress deletion completed"
+echo -e "${CYAN}📥 Deleting HTTPRoute...${NC}"
+kubectl delete httproute admin-ui-ingress-admin-ui.local -n "$NAMESPACE" --ignore-not-found
+print_status "ok" "HTTPRoute deletion completed"
 
 print_separator
 echo -e "${CYAN}🔒 Deleting network policy...${NC}"
