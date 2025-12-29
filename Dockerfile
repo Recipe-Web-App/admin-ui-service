@@ -57,6 +57,7 @@ WORKDIR /app
 # Install build dependencies
 # Using latest versions from Alpine repository
 RUN apk add --no-cache \
+        nodejs \
         python3 \
         make \
         g++ \
