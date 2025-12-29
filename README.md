@@ -24,8 +24,8 @@ Built with PrimeNG v20, TailwindCSS v4, and comprehensive development tooling.
 
 ### Prerequisites
 
-- Node.js 20.x or 22.x
-- npm 11.x or higher
+- Node.js 20.x or higher
+- Bun 1.1.0 or higher
 - Git
 
 ### Installation
@@ -36,13 +36,13 @@ git clone https://github.com/Recipe-Web-App/admin-ui-service.git
 cd admin-ui-service
 
 # Install dependencies
-npm install
+bun install
 
 # Install pre-commit hooks
 pre-commit install
 
 # Start development server
-npm run dev
+bun run dev
 ```
 
 The application will be available at `http://localhost:4200/` with hot module replacement enabled.
@@ -51,20 +51,19 @@ The application will be available at `http://localhost:4200/` with hot module re
 
 | Script                  | Description                          |
 | ----------------------- | ------------------------------------ |
-| `npm run dev`           | Start development server with HMR    |
-| `npm start`             | Start development server             |
-| `npm run build`         | Build for production                 |
-| `npm run build:ssr`     | Build with server-side rendering     |
-| `npm test`              | Run unit tests with Karma            |
-| `npm run test:vitest`   | Run unit tests with Vitest           |
-| `npm run test:e2e`      | Run end-to-end tests with Playwright |
-| `npm run test:coverage` | Run tests with coverage report       |
-| `npm run test:ui`       | Interactive test UI                  |
-| `npm run lint`          | Run linting                          |
-| `npm run lint:fix`      | Fix linting issues                   |
-| `npm run format`        | Format code with Prettier            |
-| `npm run build:check`   | Type check without build             |
-| `npm run analyze`       | Analyze bundle size                  |
+| `bun run dev`           | Start development server with HMR    |
+| `bun run start`         | Start development server             |
+| `bun run build`         | Build for production with SSR        |
+| `bun run test`          | Run unit tests with Vitest           |
+| `bun run test:watch`    | Run unit tests in watch mode         |
+| `bun run test:e2e`      | Run end-to-end tests with Playwright |
+| `bun run test:coverage` | Run tests with coverage report       |
+| `bun run test:ui`       | Interactive test UI                  |
+| `bun run lint`          | Run linting                          |
+| `bun run lint:fix`      | Fix linting issues                   |
+| `bun run format`        | Format code with Prettier            |
+| `bun run build:check`   | Type check without build             |
+| `bun run analyze`       | Analyze bundle size                  |
 
 ## 🏗️ Project Structure
 
@@ -81,15 +80,16 @@ src/app/
 ### Unit Tests
 
 ```bash
-npm run test:vitest          # Run once
-npm run test:coverage        # With coverage
-npm run test:ui             # Interactive UI
+bun run test                 # Run once
+bun run test:watch           # Watch mode
+bun run test:coverage        # With coverage
+bun run test:ui              # Interactive UI
 ```
 
 ### E2E Tests
 
 ```bash
-npm run test:e2e            # Run E2E tests
+bun run test:e2e             # Run E2E tests
 ```
 
 ## 🔧 Development
@@ -110,7 +110,7 @@ Multiple layers of security scanning:
 - **detect-secrets** for secret detection
 - **gitleaks** for git history scanning
 - **trufflehog** for additional secret detection
-- **npm audit** for dependency vulnerabilities
+- **bun audit** for dependency vulnerabilities
 - **CodeQL** for code analysis
 
 ## 🚀 Deployment
@@ -118,13 +118,13 @@ Multiple layers of security scanning:
 ### Production Build
 
 ```bash
-npm run build:ssr
+bun run build
 ```
 
 ### Server-Side Rendering
 
 ```bash
-npm run serve:ssr:admin-ui-service
+bun run serve:ssr:admin-ui-service
 ```
 
 ## 🤝 Contributing
@@ -136,8 +136,8 @@ We welcome contributions! Please see our [Contributing Guidelines](.github/CONTR
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/your-feature-name`
 3. Make your changes
-4. Run tests: `npm test`
-5. Run linting: `npm run lint`
+4. Run tests: `bun run test`
+5. Run linting: `bun run lint`
 6. Commit using [Conventional Commits](https://conventionalcommits.org/)
 7. Push and create a Pull Request
 
@@ -157,7 +157,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Icons**: Lucide Angular
 - **Authentication**: angular-oauth2-oidc
 - **State Management**: Angular Signals with TanStack Query
-- **Testing**: Vitest, Playwright, Karma/Jasmine
+- **Testing**: Vitest, Playwright
 - **Build Tools**: Angular CLI, esbuild
 - **Code Quality**: ESLint, Prettier, Stylelint
 

@@ -9,7 +9,7 @@ ARG BUILD_DATE
 ARG VCS_REF
 
 # Stage 1: Dependencies
-FROM node:25-alpine AS deps
+FROM oven/bun:1-alpine AS deps
 LABEL stage=deps \
       org.opencontainers.image.title="Admin UI Service - Dependencies" \
       org.opencontainers.image.description="Dependencies stage for Admin UI Service" \
@@ -30,25 +30,21 @@ RUN apk update && \
         libc6-compat \
         ca-certificates \
         tzdata && \
-    rm -rf /var/cache/apk/* && \
-    # Update npm to version 11 to meet >=11.0.0 requirement
-    npm install -g npm@11
+    rm -rf /var/cache/apk/*
 
 # Set timezone
 ENV TZ=UTC
 
 # Copy package files with specific ownership
-COPY --chown=node:node package*.json ./
+COPY --chown=bun:bun package.json bun.lock ./
 
 # Verify package integrity and install dependencies
-RUN npm ci --only=production --frozen-lockfile --audit=false --fund=false && \
-    npm cache clean --force
-
+RUN bun install --production --frozen-lockfile && \
 # Remove package files to reduce attack surface
-RUN rm -f package*.json
+    rm -f package.json bun.lock
 
 # Stage 2: Builder
-FROM node:25-alpine AS builder
+FROM oven/bun:1-alpine AS builder
 LABEL stage=builder \
       org.opencontainers.image.title="Admin UI Service - Builder" \
       org.opencontainers.image.description="Build stage for Admin UI Service" \
@@ -61,27 +57,26 @@ WORKDIR /app
 # Install build dependencies
 # Using latest versions from Alpine repository
 RUN apk add --no-cache \
+        nodejs \
         python3 \
         make \
         g++ \
         git && \
-    rm -rf /var/cache/apk/* && \
-    # Update npm to version 11 to meet >=11.0.0 requirement
-    npm install -g npm@11
+    rm -rf /var/cache/apk/*
 
 # Copy production node_modules from deps stage
-COPY --from=deps --chown=node:node /app/node_modules ./node_modules
+COPY --from=deps --chown=bun:bun /app/node_modules ./node_modules
 
 # Copy package files
-COPY --chown=node:node package*.json ./
+COPY --chown=bun:bun package.json bun.lock ./
 
 # Install all dependencies (including devDependencies) with mount cache
-RUN --mount=type=cache,target=/root/.npm \
+RUN --mount=type=cache,target=/root/.bun/install/cache \
     --mount=type=cache,target=/app/.angular/cache \
-    npm ci --frozen-lockfile --prefer-offline
+    bun install --frozen-lockfile
 
 # Copy source code with proper ownership and .dockerignore respect
-COPY --chown=node:node . .
+COPY --chown=bun:bun . .
 
 # Set build environment variables
 ENV NG_CLI_ANALYTICS=false \
@@ -89,13 +84,9 @@ ENV NG_CLI_ANALYTICS=false \
     NODE_OPTIONS="--max-old-space-size=2048"
 
 # Build the application with optimizations
-RUN --mount=type=cache,target=/app/.angular/cache \
-    npm run build && \
-    npm prune --production && \
-    npm cache clean --force
-
-# Verify build artifacts
-RUN test -d dist || (echo "Build failed: dist not found" && exit 1)
+RUN --mount=type=cache,target=/app/.angular/cache bun run build && \
+    # Verify build artifacts
+    test -d dist || (echo "Build failed: dist not found" && exit 1)
 
 # Stage 3: Runtime Security Scanner (Optional)
 FROM builder AS security-scanner
@@ -103,16 +94,14 @@ LABEL stage=security-scanner
 
 # Install security scanning tools
 # Using latest versions from Alpine repository
-RUN apk add --no-cache \
-        curl \
-        jq && \
-    rm -rf /var/cache/apk/*
-
-# Run security scans (optional, can be skipped in CI)
-RUN npm audit --production --audit-level=high || true
+RUN apk add --no-cache curl jq && \
+    rm -rf /var/cache/apk/* && \
+    # Run security scans (optional, can be skipped in CI)
+    # Note: bun audit is experimental, using || true to avoid build failures
+    RUN bun pm audit || true
 
 # Stage 4: Final Runtime
-FROM node:25-alpine AS runner
+FROM oven/bun:1-alpine AS runner
 LABEL stage=runner \
       org.opencontainers.image.title="Admin UI Service" \
       org.opencontainers.image.description="Production-ready Admin UI Service" \
@@ -137,32 +126,26 @@ RUN apk update && \
         tini && \
     rm -rf /var/cache/apk/* && \
     # Create app directory with secure permissions
-    mkdir -p /app && \
-    # Create non-root user with specific UID/GID
-    addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 --ingroup nodejs --home /app angular
+    mkdir -p /app
 
 # Set secure environment variables
 ENV NODE_ENV=production \
     NG_CLI_ANALYTICS=false \
-    NODE_OPTIONS="--unhandled-rejections=strict --enable-source-maps" \
     TZ=UTC \
     PORT=4000 \
-    HOSTNAME="0.0.0.0" \
-    # Security hardening
-    NODE_TLS_REJECT_UNAUTHORIZED=1
+    HOSTNAME="0.0.0.0"
 
 WORKDIR /app
 
 # Copy built application with proper ownership and minimal files
-COPY --from=builder --chown=angular:nodejs /app/dist ./dist
-COPY --from=builder --chown=angular:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=angular:nodejs /app/package.json ./package.json
+COPY --from=builder --chown=bun:bun /app/dist ./dist
+COPY --from=builder --chown=bun:bun /app/node_modules ./node_modules
+COPY --from=builder --chown=bun:bun /app/package.json ./package.json
 
 # Set final permissions and switch to non-root user
-RUN chown -R angular:nodejs /app && \
+RUN chown -R bun:bun /app && \
     chmod 755 /app
-USER angular
+USER bun
 
 # Create non-root owned directories for Angular
 RUN mkdir -p dist/cache && \
@@ -171,14 +154,11 @@ RUN mkdir -p dist/cache && \
 # Expose port (non-privileged)
 EXPOSE 4000
 
-# Add resource limits and performance optimizations
-ENV NODE_OPTIONS="--max-old-space-size=448"
-
-# Use tini for proper signal handling (alternative to dumb-init)
+# Use tini for proper signal handling
 ENTRYPOINT ["tini", "--"]
 
-# Add startup script with graceful shutdown
-CMD ["sh", "-c", "trap 'echo Received SIGTERM, shutting down gracefully; kill -TERM $PID; wait $PID' TERM; node dist/admin-ui-service/server/server.mjs & PID=$!; wait $PID"]
+# Run with Bun for faster startup and lower memory usage
+CMD ["bun", "run", "dist/admin-ui-service/server/server.mjs"]
 
 # Add build metadata as labels (populated by CI/CD)
 LABEL build.number="${BUILD_NUMBER:-unknown}" \

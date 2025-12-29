@@ -60,7 +60,7 @@ export const loggingConfig: Record<string, LoggerConfig> = {
  * Get logging configuration for current environment
  */
 export function getLoggingConfig(): LoggerConfig {
-  const env = process.env['NODE_ENV'] || 'development';
+  const env = Bun.env['NODE_ENV'] || 'development';
   return loggingConfig[env] || loggingConfig['development'];
 }
 

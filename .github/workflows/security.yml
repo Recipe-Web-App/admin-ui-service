@@ -36,8 +36,8 @@ jobs:
           deny-licenses: GPL-3.0, AGPL-3.0
           comment-summary-in-pr: on-failure
 
-  npm-audit:
-    name: npm Audit
+  bun-audit:
+    name: Bun Audit
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -46,17 +46,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '20'
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
-      - name: Run npm audit
-        run: npm audit --audit-level=high
+      - name: Run bun audit
+        run: bun pm audit
         continue-on-error: true
 
   trivy-repo:
@@ -96,14 +95,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '20'
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
@@ -181,7 +179,7 @@ jobs:
   security-summary:
     name: Security Summary
     runs-on: ubuntu-latest
-    needs: [dependency-review, npm-audit, trivy-repo, sbom, docker-scan, secrets-scan]
+    needs: [dependency-review, bun-audit, trivy-repo, sbom, docker-scan, secrets-scan]
     if: always()
     permissions:
       contents: read
@@ -192,7 +190,7 @@ jobs:
           echo "✅ Security scans completed"
           echo "📊 Summary of security checks:"
           echo "  - Dependency Review: ${{ needs.dependency-review.result }}"
-          echo "  - npm Audit: ${{ needs.npm-audit.result }}"
+          echo "  - Bun Audit: ${{ needs.bun-audit.result }}"
           echo "  - Trivy Repository Scan: ${{ needs.trivy-repo.result }}"
           echo "  - SBOM Generation: ${{ needs.sbom.result }}"
           echo "  - Docker Image Scan: ${{ needs.docker-scan.result }}"

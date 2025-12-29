@@ -1,0 +1,227 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "group:monorepos",
+    "group:recommended",
+    "helpers:pinGitHubActionDigests",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":separateMajorReleases",
+    ":ignoreUnstable",
+    ":rebaseStalePrs"
+  ],
+  "description": "Renovate configuration for admin-ui-service (Bun + Angular)",
+  "timezone": "America/New_York",
+  "schedule": ["before 10am on Monday"],
+  "prHourlyLimit": 10,
+  "prConcurrentLimit": 100,
+  "assignees": ["jsamuelsen11"],
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "rebaseWhen": "auto",
+  "platformAutomerge": true,
+
+  "bun": {
+    "enabled": true
+  },
+
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 5am on the first day of the month"],
+    "commitMessageAction": "Update",
+    "commitMessageExtra": "lockfile maintenance"
+  },
+
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "dependencies"],
+    "schedule": ["at any time"],
+    "prPriority": 10,
+    "automerge": true
+  },
+
+  "packageRules": [
+    {
+      "description": "Production dependencies - patch updates (automerge)",
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["patch"],
+      "groupName": "production-patch",
+      "groupSlug": "production-patch",
+      "labels": ["dependencies", "javascript", "bun"],
+      "semanticCommitType": "deps",
+      "semanticCommitScope": "deps",
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Production dependencies - minor updates (manual review)",
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor"],
+      "groupName": "production-minor",
+      "groupSlug": "production-minor",
+      "labels": ["dependencies", "javascript", "bun"],
+      "semanticCommitType": "deps",
+      "semanticCommitScope": "deps",
+      "automerge": false
+    },
+    {
+      "description": "Production dependencies - major updates (manual review)",
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dependencies", "javascript", "bun", "breaking"],
+      "semanticCommitType": "deps",
+      "semanticCommitScope": "deps",
+      "automerge": false
+    },
+    {
+      "description": "Development dependencies - minor and patch updates (automerge)",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "development-minor-patch",
+      "groupSlug": "development-minor-patch",
+      "labels": ["dependencies", "javascript", "bun"],
+      "semanticCommitType": "deps-dev",
+      "semanticCommitScope": "deps-dev",
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Development dependencies - major updates (manual review)",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dependencies", "javascript", "bun", "breaking"],
+      "semanticCommitType": "deps-dev",
+      "semanticCommitScope": "deps-dev",
+      "automerge": false
+    },
+    {
+      "description": "Angular ecosystem - group together",
+      "matchPackagePatterns": ["^@angular/"],
+      "groupName": "angular",
+      "groupSlug": "angular",
+      "labels": ["dependencies", "javascript", "angular"]
+    },
+    {
+      "description": "Angular packages - disable major updates (require manual upgrade)",
+      "matchPackagePatterns": ["^@angular/"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "AnalogJS packages - group together",
+      "matchPackagePatterns": ["^@analogjs/"],
+      "groupName": "analogjs",
+      "groupSlug": "analogjs",
+      "labels": ["dependencies", "javascript", "angular"]
+    },
+    {
+      "description": "PrimeNG ecosystem - group together",
+      "matchPackagePatterns": ["^primeng$", "^primeicons$", "^@primeng/"],
+      "groupName": "primeng",
+      "groupSlug": "primeng",
+      "labels": ["dependencies", "javascript", "ui"]
+    },
+    {
+      "description": "TanStack packages - group together",
+      "matchPackagePatterns": ["^@tanstack/"],
+      "groupName": "tanstack",
+      "groupSlug": "tanstack",
+      "labels": ["dependencies", "javascript"]
+    },
+    {
+      "description": "Testing tools - group together",
+      "matchPackagePatterns": [
+        "^@playwright/",
+        "^playwright$",
+        "^@vitest/",
+        "^vitest$",
+        "^jasmine",
+        "^@types/jasmine$"
+      ],
+      "groupName": "testing",
+      "groupSlug": "testing",
+      "labels": ["dependencies", "javascript", "testing"]
+    },
+    {
+      "description": "Vitest - disable major updates (Angular compatibility)",
+      "matchPackagePatterns": ["^vitest$", "^@vitest/"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "ESLint ecosystem - group together",
+      "matchPackagePatterns": ["^eslint", "^@eslint/", "^@typescript-eslint/", "^angular-eslint$"],
+      "groupName": "eslint",
+      "groupSlug": "eslint",
+      "labels": ["dependencies", "javascript", "linting"]
+    },
+    {
+      "description": "Build tools - group together",
+      "matchPackagePatterns": ["^@tailwindcss/", "^tailwindcss$", "^postcss$", "^autoprefixer$"],
+      "groupName": "build-tools",
+      "groupSlug": "build-tools",
+      "labels": ["dependencies", "javascript", "build"]
+    },
+    {
+      "description": "TypeScript and types - group together",
+      "matchPackagePatterns": ["^typescript$", "^typescript-eslint$"],
+      "groupName": "typescript",
+      "groupSlug": "typescript",
+      "labels": ["dependencies", "javascript"]
+    },
+    {
+      "description": "Node types - disable major updates",
+      "matchPackageNames": ["@types/node"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "GitHub Actions - group all updates (automerge)",
+      "matchManagers": ["github-actions"],
+      "groupName": "github-actions",
+      "groupSlug": "github-actions",
+      "labels": ["dependencies", "github-actions"],
+      "semanticCommitType": "ci",
+      "semanticCommitScope": "actions",
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Docker base images",
+      "matchManagers": ["dockerfile"],
+      "labels": ["dependencies", "docker"],
+      "semanticCommitType": "docker",
+      "semanticCommitScope": "deps",
+      "automerge": false
+    },
+    {
+      "description": "Docker Compose",
+      "matchManagers": ["docker-compose"],
+      "labels": ["dependencies", "docker"],
+      "semanticCommitType": "docker",
+      "semanticCommitScope": "deps",
+      "automerge": false
+    },
+    {
+      "description": "Pin Bun runtime version in Dockerfiles",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["oven/bun"],
+      "versioning": "docker"
+    }
+  ],
+
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update Bun version in GitHub Actions",
+      "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
+      "matchStrings": ["BUN_VERSION:\\s*['\"]?(?<currentValue>[^'\"\\s]+)['\"]?"],
+      "depNameTemplate": "oven-sh/bun",
+      "datasourceTemplate": "github-releases"
+    }
+  ]
+}

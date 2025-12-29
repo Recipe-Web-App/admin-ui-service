@@ -10,31 +10,31 @@ Angular 20 admin dashboard for recipe management with server-side rendering (SSR
 
 ### Core Development
 
-- `npm run dev` - Start development server with HMR
-- `npm start` - Start development server (no HMR)
-- `npm run build` - Production build
-- `npm run serve:ssr:admin-ui-service` - Serve SSR build
+- `bun run dev` - Start development server with HMR
+- `bun run start` - Start development server (no HMR)
+- `bun run build` - Production build with SSR
+- `bun run serve:ssr:admin-ui-service` - Serve SSR build
 
 ### Testing
 
-- `npm test` - Run unit tests with Karma
-- `npm run test:vitest` - Run unit tests with Vitest
-- `npm run test:e2e` - Run E2E tests with Playwright
-- `npm run test:coverage` - Run tests with coverage report
-- `npm run test:ui` - Interactive test UI
+- `bun run test` - Run unit tests with Vitest
+- `bun run test:watch` - Run unit tests in watch mode
+- `bun run test:e2e` - Run E2E tests with Playwright
+- `bun run test:coverage` - Run tests with coverage report
+- `bun run test:ui` - Interactive test UI
 
 ### Code Quality
 
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
-- `npm run lint:check` - Check linting without fixing
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check formatting without fixing
-- `npm run build:check` - Type check without build (outputs to /tmp)
+- `bun run lint` - Run ESLint
+- `bun run lint:fix` - Fix ESLint issues
+- `bun run lint:check` - Check linting without fixing
+- `bun run format` - Format code with Prettier
+- `bun run format:check` - Check formatting without fixing
+- `bun run build:check` - Type check without build (outputs to /tmp)
 
 ### Analysis
 
-- `npm run analyze` - Analyze bundle size
+- `bun run analyze` - Analyze bundle size
 
 ## Architecture
 
@@ -130,8 +130,7 @@ export class AppStateService {
 
 ### Testing
 
-- **Vitest** for unit tests (primary)
-- **Karma/Jasmine** for unit tests (legacy)
+- **Vitest** for unit tests
 - **Playwright** for E2E tests
 
 ## Code Conventions
@@ -175,10 +174,9 @@ export class AppStateService {
 
 ### Testing Notes
 
-- Both Vitest and Karma/Jasmine are configured
-- Vitest is preferred for new tests
+- Vitest is the primary unit test runner
 - E2E tests use Playwright
-- No vitest.config.ts file - configuration may be in package.json or angular.json
+- Test configuration in vitest.config.ts or package.json
 
 ### SSR Considerations
 
@@ -197,7 +195,7 @@ This project uses pre-commit hooks (`.pre-commit-config.yaml`):
 - License checking
 - Install with: `pre-commit install`
 
-## Node Version Requirements
+## Runtime Requirements
 
 - Node.js >= 20.0.0
-- npm >= 11.0.0
+- Bun >= 1.1.0

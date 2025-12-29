@@ -1,54 +1,17 @@
 /**
- * Environment Configuration Loader
+ * Environment Configuration
  *
- * Provides centralized environment variable loading that:
- * - Loads .env files in local development
- * - Falls back to process.env variables in production/Kubernetes
- * - Ensures environment variables always take precedence over .env files
+ * Provides centralized environment variable access using Bun.env:
+ * - Bun automatically loads .env files (no dotenv needed)
+ * - Environment variables always take precedence over .env files
  * - Provides type-safe environment variable access
  */
 
-import { config } from 'dotenv';
-import { join } from 'path';
-
-// Track if dotenv has been loaded to avoid multiple loads
-let dotenvLoaded = false;
-
-/**
- * Load environment variables from .env file if in development
- * This is called automatically on first import but can be called manually
- */
-export function loadEnvConfig(): void {
-  if (dotenvLoaded) {
-    return;
-  }
-
-  // Only load .env in development or when NODE_ENV is not set
-  const nodeEnv = process.env['NODE_ENV'];
-  const isProduction = nodeEnv === 'production';
-
-  if (!isProduction) {
-    try {
-      // Try to load .env from project root
-      const envPath = join(process.cwd(), '.env');
-      config({ path: envPath, override: false }); // override: false means env vars take precedence
-      console.log(`✓ Loaded environment configuration from .env file`);
-    } catch {
-      // Silently fail if .env doesn't exist - this is expected in production
-      console.log(`ℹ No .env file found, using environment variables only`);
-    }
-  }
-
-  dotenvLoaded = true;
-}
-
 /**
  * Get an environment variable with optional default value
- * Automatically loads .env on first call
  */
 export function getEnvVar(key: string, defaultValue?: string): string | undefined {
-  loadEnvConfig();
-  return process.env[key] || defaultValue;
+  return Bun.env[key] || defaultValue;
 }
 
 /**
@@ -56,8 +19,7 @@ export function getEnvVar(key: string, defaultValue?: string): string | undefine
  * Throws an error if the variable is not set
  */
 export function getRequiredEnvVar(key: string): string {
-  loadEnvConfig();
-  const value = process.env[key];
+  const value = Bun.env[key];
   if (!value) {
     throw new Error(`Required environment variable ${key} is not set`);
   }
@@ -69,8 +31,7 @@ export function getRequiredEnvVar(key: string): string {
  * Considers 'true', '1', 'yes' as true, everything else as false
  */
 export function getEnvBool(key: string, defaultValue = false): boolean {
-  loadEnvConfig();
-  const value = process.env[key];
+  const value = Bun.env[key];
   if (!value) {
     return defaultValue;
   }
@@ -81,8 +42,7 @@ export function getEnvBool(key: string, defaultValue = false): boolean {
  * Get an environment variable as a number
  */
 export function getEnvNumber(key: string, defaultValue?: number): number | undefined {
-  loadEnvConfig();
-  const value = process.env[key];
+  const value = Bun.env[key];
   if (!value) {
     return defaultValue;
   }
@@ -98,7 +58,6 @@ export function getEnvNumber(key: string, defaultValue?: number): number | undef
  * Check if we're running in development mode
  */
 export function isDevelopment(): boolean {
-  loadEnvConfig();
   return getEnvVar('NODE_ENV', 'development') === 'development';
 }
 
@@ -106,7 +65,6 @@ export function isDevelopment(): boolean {
  * Check if we're running in production mode
  */
 export function isProduction(): boolean {
-  loadEnvConfig();
   return getEnvVar('NODE_ENV') === 'production';
 }
 
@@ -115,12 +73,11 @@ export function isProduction(): boolean {
  * Useful for grouping related configuration
  */
 export function getEnvVarsWithPrefix(prefix: string): Record<string, string> {
-  loadEnvConfig();
   const result: Record<string, string> = {};
 
-  Object.keys(process.env).forEach((key) => {
+  Object.keys(Bun.env).forEach((key) => {
     if (key.startsWith(prefix)) {
-      const value = process.env[key];
+      const value = Bun.env[key];
       if (value) {
         result[key] = value;
       }
@@ -130,5 +87,9 @@ export function getEnvVarsWithPrefix(prefix: string): Record<string, string> {
   return result;
 }
 
-// Auto-load on import
-loadEnvConfig();
+/**
+ * @deprecated No longer needed - Bun automatically loads .env files
+ */
+export function loadEnvConfig(): void {
+  // No-op: Bun automatically loads .env files
+}

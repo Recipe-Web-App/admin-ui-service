@@ -1,3 +1,13 @@
+/**
+ * Angular SSR Server
+ *
+ * This server runs on the Bun runtime for maximum performance.
+ * Express is used for middleware compatibility with @angular/ssr/node.
+ *
+ * Note: Angular SSR currently requires Express for its Node.js adapter.
+ * When @angular/ssr adds native Bun support, this can be migrated to Bun.serve().
+ */
+
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
@@ -26,6 +36,7 @@ app.use('/api/v1/admin-ui', apiRoutes);
 
 /**
  * Serve static files from /browser
+ * Note: In production, static files are typically served by a CDN or reverse proxy
  */
 app.use(
   express.static(browserDistFolder, {
@@ -47,20 +58,19 @@ app.use((req, res, next) => {
 
 /**
  * Start the server if this module is the main entry point.
- * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
+ * Runs on Bun runtime with Express for Angular SSR compatibility.
  */
 if (isMainModule(import.meta.url)) {
-  const port = getEnvNumber('PORT', 4000);
-  app.listen(port, (error) => {
-    if (error) {
-      throw error;
-    }
+  const port = getEnvNumber('PORT', 4000)!;
 
-    console.log(`Node Express server listening on http://localhost:${port}`);
+  app.listen(port, () => {
+    console.log(`Server listening on http://localhost:${port}`);
+    console.log(`Runtime: Bun ${Bun.version}`);
+    console.log(`Environment: ${Bun.env['NODE_ENV'] || 'development'}`);
   });
 }
 
 /**
- * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
+ * Request handler used by the Angular CLI (for dev-server and during build).
  */
 export const reqHandler = createNodeRequestHandler(app);

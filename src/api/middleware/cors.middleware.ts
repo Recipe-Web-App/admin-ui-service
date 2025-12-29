@@ -19,7 +19,7 @@ export interface CorsOptions {
  * Default CORS configuration
  */
 const defaultCorsOptions: CorsOptions = {
-  origins: process.env['CORS_ORIGINS']?.split(',') || ['http://localhost:4200'],
+  origins: Bun.env['CORS_ORIGINS']?.split(',') || ['http://localhost:4200'],
   credentials: true,
   maxAge: 86400, // 24 hours
 };
@@ -67,8 +67,8 @@ export function cors(options: Partial<CorsOptions> = {}) {
  */
 export function strictCors() {
   const allowedOrigins =
-    process.env['NODE_ENV'] === 'production'
-      ? process.env['CORS_ORIGINS']?.split(',') || []
+    Bun.env['NODE_ENV'] === 'production'
+      ? Bun.env['CORS_ORIGINS']?.split(',') || []
       : ['http://localhost:4200', 'http://localhost:4000'];
 
   return cors({
