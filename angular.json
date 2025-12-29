@@ -2,7 +2,7 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm",
+    "packageManager": "bun",
     "analytics": false,
     "schematicCollections": ["angular-eslint"]
   },
@@ -72,20 +72,6 @@
         },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"
-        },
-        "test": {
-          "builder": "@angular/build:karma",
-          "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "tsconfig.spec.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
-            "styles": ["src/styles.css"]
-          }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",

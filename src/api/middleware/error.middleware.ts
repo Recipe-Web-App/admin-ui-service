@@ -69,7 +69,7 @@ export function errorHandler(
   }
 
   // Default error response
-  const isDevelopment = process.env['NODE_ENV'] === 'development';
+  const isDevelopment = Bun.env['NODE_ENV'] === 'development';
   const message = isDevelopment ? err.message : 'An unexpected error occurred';
 
   return ErrorResponses.internalError(res, message);

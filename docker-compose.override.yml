@@ -35,7 +35,7 @@ services:
       - ./package.json:/app/package.json:ro
       # Exclude node_modules to prevent conflicts
       - /app/node_modules
-    command: ['npm', 'run', 'dev']
+    command: ['bun', 'run', 'dev']
     read_only: false
     tmpfs:
       - /tmp:noexec,nosuid,size=500m
@@ -68,7 +68,7 @@ services:
       - admin-ui
     profiles:
       - testing
-    command: ['npm', 'run', 'test:e2e']
+    command: ['bun', 'run', 'test:e2e']
 
   # Vitest Unit Testing with Watch Mode
   vitest:
@@ -86,7 +86,7 @@ services:
       - recipe-network
     profiles:
       - testing
-    command: ['npm', 'run', 'test:vitest', '--', '--watch']
+    command: ['bun', 'run', 'test:watch']
 
   # ------------------------------------------------------------------------------
   # Development Database (if needed)

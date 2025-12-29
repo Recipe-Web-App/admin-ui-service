@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '20'
+  BUN_VERSION: 'latest'
   COVERAGE_THRESHOLD: 80 # Minimum coverage percentage
 
 permissions:
@@ -29,24 +29,23 @@ jobs:
         with:
           fetch-depth: 2 # Need two commits for diff
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          bun-version: ${{ env.BUN_VERSION }}
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Run tests with coverage
-        run: npm run test -- --coverage --watch=false
+        run: bun run test:coverage
 
       - name: Calculate coverage percentage
         id: coverage
         run: |
           if [ -f coverage/lcov.info ]; then
             # Extract coverage percentage from lcov.info
-            COVERAGE=$(npx lcov-summary coverage/lcov.info | grep 'Lines' | awk '{print $2}' | sed 's/%//' || echo "0")
+            COVERAGE=$(bunx lcov-summary coverage/lcov.info | grep 'Lines' | awk '{print $2}' | sed 's/%//' || echo "0")
             echo "coverage=${COVERAGE}" >> $GITHUB_OUTPUT
             echo "Current coverage: ${COVERAGE}%"
           else
@@ -70,7 +69,7 @@ jobs:
         if: always()
         run: |
           if [ -f coverage/lcov.info ]; then
-            npx genhtml coverage/lcov.info -o coverage/html || echo "genhtml not available"
+            bunx genhtml coverage/lcov.info -o coverage/html || echo "genhtml not available"
           fi
 
       - name: Upload coverage report

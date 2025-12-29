@@ -1,0 +1,3 @@
+[test]
+# Run vitest for Angular component testing (requires template compilation)
+preload = ["./bun-test-runner.ts"]

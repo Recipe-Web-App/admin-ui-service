@@ -44,20 +44,19 @@ jobs:
           build-mode: ${{ matrix.build-mode }}
           queries: +security-and-quality
 
-      - name: Setup Node.js
+      - name: Setup Bun
         if: matrix.build-mode == 'manual'
-        uses: actions/setup-node@v6
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: '20'
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
         if: matrix.build-mode == 'manual'
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Build
         if: matrix.build-mode == 'manual'
-        run: npm run build
+        run: bun run build
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4

@@ -19,14 +19,14 @@ router.get('/config', optionalAuth, (req: Request, res: Response) => {
   const authConfig = getAuthConfig();
 
   const config: AppConfig = {
-    apiUrl: process.env['API_URL'] || 'http://localhost:8080/api',
+    apiUrl: Bun.env['API_URL'] || 'http://localhost:8080/api',
     authIssuer: authConfig.issuer,
     authClientId: getClientId(),
     features: {
-      enableAnalytics: process.env['ENABLE_ANALYTICS'] === 'true',
-      enableRealTimeUpdates: process.env['ENABLE_REAL_TIME_UPDATES'] === 'true',
-      enableOfflineMode: process.env['ENABLE_OFFLINE_MODE'] === 'true',
-      enableDarkMode: process.env['ENABLE_DARK_MODE'] === 'true',
+      enableAnalytics: Bun.env['ENABLE_ANALYTICS'] === 'true',
+      enableRealTimeUpdates: Bun.env['ENABLE_REAL_TIME_UPDATES'] === 'true',
+      enableOfflineMode: Bun.env['ENABLE_OFFLINE_MODE'] === 'true',
+      enableDarkMode: Bun.env['ENABLE_DARK_MODE'] === 'true',
     },
     ui: {
       theme: 'light',
@@ -51,13 +51,13 @@ router.get('/config', optionalAuth, (req: Request, res: Response) => {
  */
 router.get('/features', (req: Request, res: Response) => {
   const features: FeatureFlags = {
-    enableAnalytics: process.env['ENABLE_ANALYTICS'] === 'true',
-    enableRealTimeUpdates: process.env['ENABLE_REAL_TIME_UPDATES'] === 'true',
-    enableOfflineMode: process.env['ENABLE_OFFLINE_MODE'] === 'true',
-    enableDarkMode: process.env['ENABLE_DARK_MODE'] === 'true',
+    enableAnalytics: Bun.env['ENABLE_ANALYTICS'] === 'true',
+    enableRealTimeUpdates: Bun.env['ENABLE_REAL_TIME_UPDATES'] === 'true',
+    enableOfflineMode: Bun.env['ENABLE_OFFLINE_MODE'] === 'true',
+    enableDarkMode: Bun.env['ENABLE_DARK_MODE'] === 'true',
     // Add more feature flags as needed
-    enableBetaFeatures: process.env['NODE_ENV'] === 'development',
-    enableDebugMode: process.env['NODE_ENV'] === 'development',
+    enableBetaFeatures: Bun.env['NODE_ENV'] === 'development',
+    enableDebugMode: Bun.env['NODE_ENV'] === 'development',
     enableMaintenanceMode: false,
   };
 
@@ -69,17 +69,17 @@ router.get('/features', (req: Request, res: Response) => {
  * Get environment information (development only)
  */
 router.get('/environment', (req: Request, res: Response) => {
-  if (process.env['NODE_ENV'] === 'production') {
+  if (Bun.env['NODE_ENV'] === 'production') {
     return sendSuccess(res, { environment: 'production' });
   }
 
   // Only expose detailed info in development
   const envInfo = {
-    environment: process.env['NODE_ENV'],
-    version: process.env['npm_package_version'],
-    node: process.version,
+    environment: Bun.env['NODE_ENV'],
+    version: Bun.version,
+    runtime: 'bun',
     platform: process.platform,
-    apiUrl: process.env['API_URL'],
+    apiUrl: Bun.env['API_URL'],
     authIssuer: getAuthConfig().issuer,
   };
 

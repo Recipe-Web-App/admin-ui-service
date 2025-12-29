@@ -28,32 +28,32 @@ By participating, you are expected to uphold this code.
 
 ### Prerequisites
 
-- Node.js 20.x or 22.x
-- npm 11.x or higher
+- Bun 1.1.0 or higher
+- Node.js 20.x or higher (for Angular CLI compatibility)
 - Git
 
 ### Installation
 
 ```bash
 # Install dependencies
-npm install
+bun install
 
 # Install pre-commit hooks
 pre-commit install
 
 # Start development server
-npm run dev
+bun run dev
 ```
 
 ### Available Scripts
 
-- `npm run dev` - Start development server with HMR
-- `npm run build` - Build for production
-- `npm run build:ssr` - Build with server-side rendering
-- `npm run test` - Run unit tests
-- `npm run test:e2e` - Run end-to-end tests
-- `npm run lint` - Run linting
-- `npm run format` - Format code with Prettier
+- `bun run dev` - Start development server with HMR
+- `bun run build` - Build for production
+- `bun run serve:ssr:admin-ui-service` - Serve SSR build
+- `bun run test` - Run unit tests
+- `bun run test:e2e` - Run end-to-end tests
+- `bun run lint` - Run linting
+- `bun run format` - Format code with Prettier
 
 ## Making Changes
 
@@ -82,9 +82,9 @@ Valid types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`
 
 ## Submitting Changes
 
-1. Ensure all tests pass: `npm test`
-2. Run linting: `npm run lint`
-3. Format code: `npm run format`
+1. Ensure all tests pass: `bun run test`
+2. Run linting: `bun run lint`
+3. Format code: `bun run format`
 4. Push to your fork
 5. Create a Pull Request
 
@@ -135,15 +135,15 @@ src/app/
 ### Unit Tests
 
 ```bash
-npm run test                 # Run once
-npm run test:coverage        # With coverage
-npm run test:ui             # Interactive UI
+bun run test                 # Run once
+bun run test:coverage        # With coverage
+bun run test:ui              # Interactive UI
 ```
 
 ### E2E Tests
 
 ```bash
-npm run test:e2e            # Run E2E tests
+bun run test:e2e             # Run E2E tests
 ```
 
 ### Writing Tests
