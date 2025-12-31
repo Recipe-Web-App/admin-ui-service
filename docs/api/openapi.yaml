@@ -1,0 +1,528 @@
+openapi: 3.1.0
+info:
+  title: Admin UI Service API
+  description: Backend API for the Angular admin dashboard for recipe management with SSR support.
+  version: 0.1.0
+  contact:
+    name: Recipe Web App Team
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: /api/v1/admin-ui
+    description: API base path
+
+tags:
+  - name: Health
+    description: Kubernetes health and readiness probes
+  - name: Configuration
+    description: Client configuration and feature flags
+
+paths:
+  /health:
+    get:
+      summary: Kubernetes liveness probe
+      description: Check if the application is running. Returns a simple status indicating the service is alive.
+      operationId: getHealth
+      tags:
+        - Health
+      security: []
+      responses:
+        '200':
+          description: Application is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                status: ok
+                timestamp: '2025-12-31T12:00:00.000Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /ready:
+    get:
+      summary: Kubernetes readiness probe
+      description: Check if the application is ready to serve traffic.
+      operationId: getReady
+      tags:
+        - Health
+      security: []
+      responses:
+        '200':
+          description: Application is ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadinessResponse'
+              example:
+                ready: true
+                timestamp: '2025-12-31T12:00:00.000Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /config:
+    get:
+      summary: Get client configuration
+      description: |
+        Returns client configuration including API URL, authentication settings,
+        feature flags, and UI preferences. When authenticated, returns user-specific
+        UI preferences (e.g., dark theme for authenticated users).
+      operationId: getConfig
+      tags:
+        - Configuration
+      security:
+        - {}
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Configuration retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AppConfig'
+                      message:
+                        type: string
+                        example: Configuration retrieved successfully
+              example:
+                success: true
+                data:
+                  apiUrl: http://localhost:8080/api
+                  authIssuer: http://localhost:8080/api/v1/auth
+                  authClientId: admin-ui-client
+                  features:
+                    enableAnalytics: true
+                    enableRealTimeUpdates: false
+                    enableOfflineMode: false
+                    enableDarkMode: true
+                  ui:
+                    theme: light
+                    language: en
+                    timezone: UTC
+                    itemsPerPage: 20
+                message: Configuration retrieved successfully
+                timestamp: '2025-12-31T12:00:00.000Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /features:
+    get:
+      summary: Get feature flags
+      description: Returns all feature flags for the application.
+      operationId: getFeatures
+      tags:
+        - Configuration
+      security: []
+      responses:
+        '200':
+          description: Feature flags retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/FeatureFlags'
+              example:
+                success: true
+                data:
+                  enableAnalytics: true
+                  enableRealTimeUpdates: false
+                  enableOfflineMode: false
+                  enableDarkMode: true
+                  enableBetaFeatures: true
+                  enableDebugMode: true
+                  enableMaintenanceMode: false
+                timestamp: '2025-12-31T12:00:00.000Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /environment:
+    get:
+      summary: Get environment information
+      description: |
+        Returns environment information. In production, only returns the environment
+        name for security. In development, returns detailed runtime information.
+      operationId: getEnvironment
+      tags:
+        - Configuration
+      security: []
+      responses:
+        '200':
+          description: Environment information retrieved
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        oneOf:
+                          - $ref: '#/components/schemas/EnvironmentInfoDevelopment'
+                          - $ref: '#/components/schemas/EnvironmentInfoProduction'
+              examples:
+                development:
+                  summary: Development environment response
+                  value:
+                    success: true
+                    data:
+                      environment: development
+                      version: '1.1.38'
+                      runtime: bun
+                      platform: linux
+                      apiUrl: http://localhost:8080
+                      authIssuer: http://localhost:8080/api/v1/auth
+                    timestamp: '2025-12-31T12:00:00.000Z'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        OAuth2/OIDC access token. Supports both RS256 (JWKS validation)
+        and HS256 (shared secret) tokens. Optional for most endpoints.
+
+  schemas:
+    # Base API Response Structure (mirrors ApiResponse<T> in api.types.ts)
+    ApiResponse:
+      type: object
+      required:
+        - success
+        - timestamp
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the request was successful
+        data:
+          description: Response payload (type varies by endpoint)
+        message:
+          type: string
+          description: Human-readable message
+        error:
+          $ref: '#/components/schemas/ApiError'
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of the response
+        requestId:
+          type: string
+          description: Unique request identifier for tracing
+
+    # API Error Structure (mirrors ApiError in api.types.ts)
+    ApiError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Error code identifier
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional error details
+        stack:
+          type: string
+          description: Stack trace (development only)
+
+    # API Error Codes (mirrors ApiErrorCode type in api.types.ts)
+    ApiErrorCode:
+      type: string
+      enum:
+        - VALIDATION_ERROR
+        - AUTHENTICATION_ERROR
+        - AUTHORIZATION_ERROR
+        - NOT_FOUND
+        - RATE_LIMIT_EXCEEDED
+        - INTERNAL_SERVER_ERROR
+        - SERVICE_UNAVAILABLE
+        - BAD_REQUEST
+        - CONFLICT
+
+    # Health Response (from health.ts /health endpoint)
+    HealthResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+      properties:
+        status:
+          type: string
+          enum:
+            - ok
+          description: Health status indicator
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp
+
+    # Readiness Response (from health.ts /ready endpoint)
+    ReadinessResponse:
+      type: object
+      required:
+        - ready
+        - timestamp
+      properties:
+        ready:
+          type: boolean
+          description: Whether the application is ready to serve traffic
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp
+
+    # App Config (mirrors AppConfig in api.types.ts)
+    AppConfig:
+      type: object
+      required:
+        - apiUrl
+        - authIssuer
+        - authClientId
+        - features
+        - ui
+      properties:
+        apiUrl:
+          type: string
+          format: uri
+          description: Backend API base URL
+          example: http://localhost:8080/api
+        authIssuer:
+          type: string
+          format: uri
+          description: OAuth2/OIDC issuer URL
+          example: http://localhost:8080/api/v1/auth
+        authClientId:
+          type: string
+          description: OAuth2 client ID
+          example: admin-ui-client
+        features:
+          $ref: '#/components/schemas/FeatureFlags'
+        ui:
+          $ref: '#/components/schemas/UiConfig'
+
+    # Feature Flags (mirrors FeatureFlags in api.types.ts)
+    FeatureFlags:
+      type: object
+      required:
+        - enableAnalytics
+        - enableRealTimeUpdates
+        - enableOfflineMode
+        - enableDarkMode
+      properties:
+        enableAnalytics:
+          type: boolean
+          description: Enable analytics tracking
+        enableRealTimeUpdates:
+          type: boolean
+          description: Enable real-time update features
+        enableOfflineMode:
+          type: boolean
+          description: Enable offline mode support
+        enableDarkMode:
+          type: boolean
+          description: Enable dark mode UI option
+        enableBetaFeatures:
+          type: boolean
+          description: Enable beta features (development only)
+        enableDebugMode:
+          type: boolean
+          description: Enable debug mode (development only)
+        enableMaintenanceMode:
+          type: boolean
+          description: Enable maintenance mode
+      additionalProperties:
+        type: boolean
+
+    # UI Config (mirrors UiConfig in api.types.ts)
+    UiConfig:
+      type: object
+      required:
+        - theme
+        - language
+        - timezone
+        - itemsPerPage
+      properties:
+        theme:
+          type: string
+          enum:
+            - light
+            - dark
+            - auto
+          description: UI theme preference
+        language:
+          type: string
+          description: Language code
+          example: en
+        timezone:
+          type: string
+          description: Timezone identifier
+          example: UTC
+        itemsPerPage:
+          type: integer
+          minimum: 1
+          description: Number of items per page for pagination
+          example: 20
+
+    # Environment Info - Development (from config.ts /environment endpoint)
+    EnvironmentInfoDevelopment:
+      type: object
+      properties:
+        environment:
+          type: string
+          description: Environment name
+          example: development
+        version:
+          type: string
+          description: Bun runtime version
+          example: 1.1.38
+        runtime:
+          type: string
+          const: bun
+          description: Runtime identifier
+        platform:
+          type: string
+          description: Operating system platform
+          example: linux
+        apiUrl:
+          type: string
+          format: uri
+          description: Backend API URL
+        authIssuer:
+          type: string
+          format: uri
+          description: OAuth2/OIDC issuer URL
+
+    # Environment Info - Production (restricted response)
+    EnvironmentInfoProduction:
+      type: object
+      required:
+        - environment
+      properties:
+        environment:
+          type: string
+          const: production
+          description: Environment name (only field exposed in production)
+
+  responses:
+    BadRequest:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+          example:
+            success: false
+            error:
+              code: BAD_REQUEST
+              message: Invalid request parameters
+            timestamp: '2025-12-31T12:00:00.000Z'
+
+    Unauthorized:
+      description: Authentication required or token invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+          example:
+            success: false
+            error:
+              code: AUTHENTICATION_ERROR
+              message: Unauthorized
+            timestamp: '2025-12-31T12:00:00.000Z'
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+          example:
+            success: false
+            error:
+              code: AUTHORIZATION_ERROR
+              message: Forbidden
+            timestamp: '2025-12-31T12:00:00.000Z'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+          example:
+            success: false
+            error:
+              code: NOT_FOUND
+              message: Resource not found
+            timestamp: '2025-12-31T12:00:00.000Z'
+
+    ValidationError:
+      description: Validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+          example:
+            success: false
+            error:
+              code: VALIDATION_ERROR
+              message: Validation failed
+              details:
+                field: must be a valid value
+            timestamp: '2025-12-31T12:00:00.000Z'
+
+    RateLimitExceeded:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+          example:
+            success: false
+            error:
+              code: RATE_LIMIT_EXCEEDED
+              message: Too Many Requests
+            timestamp: '2025-12-31T12:00:00.000Z'
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+          example:
+            success: false
+            error:
+              code: INTERNAL_SERVER_ERROR
+              message: An unexpected error occurred
+            timestamp: '2025-12-31T12:00:00.000Z'
+
+    ServiceUnavailable:
+      description: Service temporarily unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+          example:
+            success: false
+            error:
+              code: SERVICE_UNAVAILABLE
+              message: Service Unavailable
+            timestamp: '2025-12-31T12:00:00.000Z'

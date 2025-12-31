@@ -43,7 +43,10 @@
     "format:check": "prettier --check src/**/*.{ts,html,css,scss}",
     "build:check": "ng build --configuration development --output-path /tmp/build-check",
     "analyze": "ng build --stats-json && bunx webpack-bundle-analyzer dist/stats.json",
-    "serve:ssr:admin-ui-service": "bun dist/admin-ui-service/server/server.mjs"
+    "serve:ssr:admin-ui-service": "bun dist/admin-ui-service/server/server.mjs",
+    "openapi:lint": "redocly lint src/api/openapi.yaml",
+    "openapi:validate": "redocly lint src/api/openapi.yaml --skip-rule=no-unused-components",
+    "openapi:preview": "redocly preview-docs src/api/openapi.yaml"
   },
   "prettier": {
     "printWidth": 100,
@@ -83,6 +86,7 @@
     "zone.js": "~0.16.0"
   },
   "devDependencies": {
+    "@redocly/cli": "^1.25.0",
     "@analogjs/vite-plugin-angular": "^2.2.0",
     "@analogjs/vitest-angular": "^2.2.0",
     "@angular/build": "^21.0.4",
