@@ -13,4 +13,4 @@ rules:
 
 apis:
   main:
-    root: src/api/openapi.yaml
+    root: docs/api/openapi.yaml
