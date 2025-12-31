@@ -44,9 +44,9 @@
     "build:check": "ng build --configuration development --output-path /tmp/build-check",
     "analyze": "ng build --stats-json && bunx webpack-bundle-analyzer dist/stats.json",
     "serve:ssr:admin-ui-service": "bun dist/admin-ui-service/server/server.mjs",
-    "openapi:lint": "redocly lint src/api/openapi.yaml",
-    "openapi:validate": "redocly lint src/api/openapi.yaml --skip-rule=no-unused-components",
-    "openapi:preview": "redocly preview-docs src/api/openapi.yaml"
+    "openapi:lint": "redocly lint docs/api/openapi.yaml",
+    "openapi:validate": "redocly lint docs/api/openapi.yaml --skip-rule=no-unused-components",
+    "openapi:preview": "redocly preview-docs docs/api/openapi.yaml"
   },
   "prettier": {
     "printWidth": 100,

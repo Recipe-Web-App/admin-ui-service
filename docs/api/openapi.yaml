@@ -148,9 +148,7 @@ paths:
   /environment:
     get:
       summary: Get environment information
-      description: |
-        Returns environment information. In production, only returns the environment
-        name for security. In development, returns detailed runtime information.
+      description: Returns environment and runtime information.
       operationId: getEnvironment
       tags:
         - Configuration
@@ -166,22 +164,17 @@ paths:
                   - type: object
                     properties:
                       data:
-                        oneOf:
-                          - $ref: '#/components/schemas/EnvironmentInfoDevelopment'
-                          - $ref: '#/components/schemas/EnvironmentInfoProduction'
-              examples:
-                development:
-                  summary: Development environment response
-                  value:
-                    success: true
-                    data:
-                      environment: development
-                      version: '1.1.38'
-                      runtime: bun
-                      platform: linux
-                      apiUrl: http://localhost:8080
-                      authIssuer: http://localhost:8080/api/v1/auth
-                    timestamp: '2025-12-31T12:00:00.000Z'
+                        $ref: '#/components/schemas/EnvironmentInfo'
+              example:
+                success: true
+                data:
+                  environment: production
+                  version: '1.1.38'
+                  runtime: bun
+                  platform: linux
+                  apiUrl: http://localhost:8080
+                  authIssuer: http://localhost:8080/api/v1/auth
+                timestamp: '2025-12-31T12:00:00.000Z'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -380,14 +373,14 @@ components:
           description: Number of items per page for pagination
           example: 20
 
-    # Environment Info - Development (from config.ts /environment endpoint)
-    EnvironmentInfoDevelopment:
+    # Environment Info (from config.ts /environment endpoint)
+    EnvironmentInfo:
       type: object
       properties:
         environment:
           type: string
           description: Environment name
-          example: development
+          example: production
         version:
           type: string
           description: Bun runtime version
@@ -408,17 +401,6 @@ components:
           type: string
           format: uri
           description: OAuth2/OIDC issuer URL
-
-    # Environment Info - Production (restricted response)
-    EnvironmentInfoProduction:
-      type: object
-      required:
-        - environment
-      properties:
-        environment:
-          type: string
-          const: production
-          description: Environment name (only field exposed in production)
 
   responses:
     BadRequest:

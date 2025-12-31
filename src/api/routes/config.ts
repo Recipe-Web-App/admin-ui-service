@@ -66,14 +66,9 @@ router.get('/features', (req: Request, res: Response) => {
 
 /**
  * GET /api/v1/admin-ui/environment
- * Get environment information (development only)
+ * Get environment information
  */
 router.get('/environment', (req: Request, res: Response) => {
-  if (Bun.env['NODE_ENV'] === 'production') {
-    return sendSuccess(res, { environment: 'production' });
-  }
-
-  // Only expose detailed info in development
   const envInfo = {
     environment: Bun.env['NODE_ENV'],
     version: Bun.version,
