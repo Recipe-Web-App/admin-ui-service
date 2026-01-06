@@ -61,7 +61,7 @@ When reporting a vulnerability, please include:
 
 ### For Developers
 
-- Run security scans regularly: `npm audit`
+- Run security scans regularly: `bun audit`
 - Use pre-commit hooks to catch security issues
 - Follow OWASP security guidelines
 - Implement Content Security Policy (CSP)
@@ -85,7 +85,7 @@ When reporting a vulnerability, please include:
 This repository includes automated security scanning:
 
 - **Secret Detection**: Multiple layers (detect-secrets, gitleaks, trufflehog)
-- **Dependency Scanning**: npm audit and Dependabot
+- **Dependency Scanning**: bun audit and Dependabot
 - **Code Analysis**: ESLint security rules
 - **Container Scanning**: Trivy (when using Docker)
 

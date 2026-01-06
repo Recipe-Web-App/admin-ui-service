@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Initial Angular 20 project setup with SSR support
-- PrimeNG v20 integration for UI components
+- Initial Angular 21 project setup with SSR support
+- PrimeNG v21 integration for UI components
 - TailwindCSS v4 for styling with PrimeNG theme integration
 - Comprehensive development tooling (ESLint, Prettier, Stylelint)
 - Pre-commit hooks with security scanning and code quality checks

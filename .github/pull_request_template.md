@@ -139,11 +139,11 @@ Tested on:
 
 ### Test Execution
 
-- [ ] `npm run test:vitest` passes
-- [ ] `npm run test:e2e` passes
-- [ ] `npm run lint` passes
-- [ ] `npm run format:check` passes
-- [ ] `npm run build` succeeds
+- [ ] `bun run test` passes
+- [ ] `bun run test:e2e` passes
+- [ ] `bun run lint` passes
+- [ ] `bun run format:check` passes
+- [ ] `bun run build` succeeds
 
 ### Angular Best Practices
 
