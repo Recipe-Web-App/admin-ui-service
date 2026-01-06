@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Angular 20 admin dashboard for recipe management with server-side rendering (SSR) support. Built with PrimeNG v20, TailwindCSS v4, and modern signal-based state management.
+Angular 21 admin dashboard for recipe management with server-side rendering (SSR) support. Built with PrimeNG v21, TailwindCSS v4, and modern signal-based state management.
 
 ## Development Commands
 
@@ -19,6 +19,7 @@ Angular 20 admin dashboard for recipe management with server-side rendering (SSR
 
 - `bun run test` - Run unit tests with Vitest
 - `bun run test:watch` - Run unit tests in watch mode
+- `bunx vitest run src/app/path/to/file.spec.ts` - Run a single test file
 - `bun run test:e2e` - Run E2E tests with Playwright
 - `bun run test:coverage` - Run tests with coverage report
 - `bun run test:ui` - Interactive test UI
@@ -35,6 +36,12 @@ Angular 20 admin dashboard for recipe management with server-side rendering (SSR
 ### Analysis
 
 - `bun run analyze` - Analyze bundle size
+
+### OpenAPI Documentation
+
+- `bun run openapi:lint` - Lint OpenAPI specification
+- `bun run openapi:validate` - Validate OpenAPI specification
+- `bun run openapi:preview` - Preview API docs locally
 
 ## Architecture
 
@@ -110,13 +117,13 @@ export class AppStateService {
 
 ### Core
 
-- **Angular 20** with SSR via Angular Universal
-- **TypeScript** with strict mode enabled
-- **Vite** build tool (integrated in Angular 20)
+- **Angular 21** with SSR
+- **TypeScript 5.9** with strict mode enabled
+- **esbuild** via @angular/build
 
 ### UI & Styling
 
-- **PrimeNG 20** for UI components
+- **PrimeNG 21** for UI components
 - **TailwindCSS 4** for utility-first styling
 - **Lucide Angular** for icons
 - Dark/Light mode theming support
@@ -174,9 +181,9 @@ export class AppStateService {
 
 ### Testing Notes
 
-- Vitest is the primary unit test runner
+- Vitest is the primary unit test runner (configured in `vitest.config.ts`)
+- Test files follow `*.spec.ts` pattern in `src/` directory
 - E2E tests use Playwright
-- Test configuration in vitest.config.ts or package.json
 
 ### SSR Considerations
 
