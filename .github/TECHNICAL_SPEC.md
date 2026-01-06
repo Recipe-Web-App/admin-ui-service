@@ -1,15 +1,14 @@
 # Recipe Web App - Admin UI Service Technical Specification
 
 > **Version**: 1.0
-> **Date**: September 2025
-> **Tech Stack**: Angular 20 + Latest 2025 Technologies
+> **Tech Stack**: Angular + Modern Web Technologies
 
 ## 1. Project Overview
 
 ### Description
 
-Modern Angular 20 server-side rendered admin dashboard for comprehensive recipe web application management
-with cutting-edge 2025 web technologies.
+Modern Angular server-side rendered admin dashboard for comprehensive recipe web application management
+with cutting-edge web technologies.
 
 ### Technical Goals
 
@@ -27,59 +26,55 @@ with cutting-edge 2025 web technologies.
 - Payment processing systems
 - External recipe API integrations (future phase)
 
-## 2. Tech Stack - September 2025 Latest
+## 2. Tech Stack
 
 ### Core Framework
 
-- **Angular 20.x** - Latest with enhanced signals and hydration
-- **Angular Universal** - SSR with streaming and improved hydration
-- **Vite 7.x** - Primary build tool (now fully integrated in Angular 20)
-- **TypeScript 6.0.x** - Latest language features and performance improvements
+- **Angular** - Latest with enhanced signals and hydration
+- **Angular SSR** - Server-side rendering with streaming and improved hydration
+- **esbuild** - Primary build tool (fully integrated in Angular)
+- **TypeScript** - Latest language features and performance improvements
 
 ### UI & Design System
 
-- **PrimeNG 19.x** - Angular 20 compatible admin components
-- **TailwindCSS 4.2.x** - Stable v4 with native CSS and enhanced performance
-- **Lucide Angular 3.x** - Modern icon system with Angular 20 support
-- **Angular Material 20.x** - Selective use for specific components
-- **Angular Animations v20** - Enhanced performance and new animation APIs
+- **PrimeNG** - Angular-compatible admin components
+- **TailwindCSS** - Utility-first CSS with native CSS and enhanced performance
+- **Lucide Angular** - Modern icon system
+- **Angular Animations** - Enhanced performance and animation APIs
 
 ### State Management & Reactivity
 
-- **Angular Signals v20** - Mature signal system with computed optimizations
-- **TanStack Query v6.x** - Latest server state with Angular 20 integration
-- **RxJS 8.2.x** - Stable with improved tree-shaking and performance
-- **Zod 4.1.x** - Major v4 with enhanced TypeScript inference
+- **Angular Signals** - Mature signal system with computed optimizations
+- **TanStack Query** - Server state management with Angular integration
+- **RxJS** - Reactive programming with improved tree-shaking
+- **Zod** - Runtime validation with enhanced TypeScript inference
 
 ### Forms & Validation
 
-- **Angular Reactive Forms v20** - Full signal integration
-- **Angular Model-driven architecture** - New patterns in v20
+- **Angular Reactive Forms** - Full signal integration
 - **Zod + Angular Forms** - Type-safe validation integration
 - **Custom form components** - Reusable PrimeNG + validation wrappers
 
 ### Authentication & Security
 
-- **angular-oauth2-oidc 20.x** - Latest with Angular 20 compatibility
+- **angular-oauth2-oidc** - OAuth2/OIDC with Angular compatibility
 - **PKCE + Refresh Token** - Modern OAuth2 flow
-- **Angular Guards v20** - Enhanced functional guards with improved DI
+- **Angular Guards** - Enhanced functional guards with improved DI
 - **JWT handling** - Secure token management and validation
 
 ### Testing Stack
 
-- **Vitest 3.x** - Major update with native Angular 20 integration
-- **Angular Testing Library 20.x** - Signal-aware testing utilities
-- **Playwright 2.2.x** - Latest E2E with improved debugging and trace viewer
-- **MSW 3.x** - Enhanced API mocking with better TypeScript support
+- **Vitest** - Fast unit testing with Angular integration
+- **Angular Testing Library** - Signal-aware testing utilities
+- **Playwright** - E2E testing with debugging and trace viewer
 - **Chromatic** - Visual regression testing for components
 
 ### Build & Development Tools
 
-- **Angular CLI 20.x** - Vite-based builds with faster HMR
-- **ESLint 10.x** - Latest with Angular 20 rules and improved performance
-- **Prettier 4.x** - Major release with enhanced formatting
-- **Storybook 9.x** - Component development with Angular 20 support
-- **Angular DevTools v20** - Enhanced signal debugging and performance profiling
+- **Angular CLI** - Builds with fast HMR
+- **ESLint** - Code quality with Angular rules
+- **Prettier** - Code formatting
+- **Angular DevTools** - Signal debugging and performance profiling
 
 ## 3. Architecture & Design
 
@@ -124,7 +119,7 @@ admin-ui-service/
 ### Component Architecture Pattern
 
 ```typescript
-// Modern Angular 20 Signal-Based Component
+// Modern Angular Signal-Based Component
 @Component({
   selector: 'app-recipe-list',
   standalone: true,
@@ -369,7 +364,7 @@ export class AppLayoutComponent {
 
 ### Runtime Performance
 
-- **OnPush change detection**: Automatic with signals in Angular 20
+- **OnPush change detection**: Automatic with signals in Angular
 - **Virtual scrolling**: For large data tables and lists
 - **Image optimization**: Next-gen formats with Angular's image directive
 - **Service workers**: PWA for caching and offline functionality
@@ -447,7 +442,7 @@ export const securityConfig = {
 
 ## 7. Testing Strategy
 
-### Unit Testing with Vitest 3.x
+### Unit Testing with Vitest
 
 ```typescript
 // Component testing with Angular Testing Library
@@ -476,7 +471,7 @@ describe('RecipeListComponent', () => {
 });
 ```
 
-### E2E Testing with Playwright 2.x
+### E2E Testing with Playwright
 
 ```typescript
 // E2E test example
@@ -718,10 +713,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run test:coverage
-      - run: npm run test:e2e
+      - run: bun install
+      - run: bun run lint
+      - run: bun run test:coverage
+      - run: bun run test:e2e
 
   build:
     needs: test
@@ -731,9 +726,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm ci
-      - run: npm run build:ssr
-      - run: npm run analyze
+      - run: bun install
+      - run: bun run build
+      - run: bun run analyze
 
   deploy:
     needs: build
@@ -777,8 +772,8 @@ export class MonitoringService {
 
 ## Next Steps
 
-1. **Environment Setup**: Install Angular CLI 20, configure development environment
-2. **Project Initialization**: Create Angular 20 project with Universal SSR
+1. **Environment Setup**: Install Angular CLI, configure development environment
+2. **Project Initialization**: Create Angular project with SSR
 3. **Dependency Installation**: Add PrimeNG, TailwindCSS, and all specified packages
 4. **Base Configuration**: Set up TypeScript, ESLint, Prettier, Vitest configurations
 5. **Authentication Integration**: Configure OIDC with Go backend
@@ -791,5 +786,4 @@ export class MonitoringService {
 ---
 
 **Document Version**: 1.0
-**Last Updated**: September 2025
-**Next Review**: October 2025
+**Note**: For current package versions, see package.json

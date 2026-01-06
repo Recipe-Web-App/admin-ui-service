@@ -54,7 +54,7 @@ See our [Security Policy](SECURITY.md) for details.
 **Q: What are the minimum requirements?**
 
 - Node.js 20.x or higher
-- npm 11.x or higher
+- Bun 1.1.0 or higher
 - See [README](../README.md#prerequisites) for details
 
 **Q: How do I set up OAuth2 authentication?**
@@ -72,28 +72,28 @@ See our [Security Policy](SECURITY.md) for details.
 **Q: How do I run tests?**
 
 ```bash
-npm run test:vitest    # Unit tests
-npm run test:e2e       # E2E tests
-npm run test:coverage  # With coverage
+bun run test           # Unit tests
+bun run test:e2e       # E2E tests
+bun run test:coverage  # With coverage
 ```
 
 **Q: How do I fix linting errors?**
 
 ```bash
-npm run lint:fix
-npm run format
+bun run lint:fix
+bun run format
 ```
 
 **Q: How do I build for production?**
 
 ```bash
-npm run build
+bun run build
 ```
 
 **Q: How do I analyze bundle size?**
 
 ```bash
-npm run analyze
+bun run analyze
 ```
 
 ### Troubleshooting
@@ -104,11 +104,11 @@ npm run analyze
 - Change port: `ng serve --port 4201`
 - Kill existing process using the port
 
-#### Q: npm install fails
+#### Q: bun install fails
 
-- Ensure you're using Node.js 20+ and npm 11+
-- Try clearing cache: `npm cache clean --force`
-- Delete `node_modules` and `package-lock.json`, then `npm install`
+- Ensure you're using Node.js 20+ and Bun 1.1.0+
+- Try clearing cache: `bun pm cache rm`
+- Delete `node_modules` and `bun.lock`, then `bun install`
 
 #### Q: SSR not working
 
@@ -119,7 +119,7 @@ npm run analyze
 #### Q: Styles not loading
 
 - Clear Angular cache: `rm -rf .angular`
-- Rebuild: `npm run build`
+- Rebuild: `bun run build`
 - Check Tailwind and PrimeNG configurations
 
 ## ⏱️ Response Times

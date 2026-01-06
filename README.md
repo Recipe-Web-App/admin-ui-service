@@ -4,13 +4,13 @@
 [![Release](https://github.com/Recipe-Web-App/admin-ui-service/actions/workflows/release.yml/badge.svg)](https://github.com/Recipe-Web-App/admin-ui-service/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A modern Angular 20 admin dashboard for recipe management with server-side rendering (SSR) support.
-Built with PrimeNG v20, TailwindCSS v4, and comprehensive development tooling.
+A modern Angular 21 admin dashboard for recipe management with server-side rendering (SSR) support.
+Built with PrimeNG v21, TailwindCSS v4, and comprehensive development tooling.
 
 ## ✨ Features
 
-- **Modern Angular 20** with SSR support
-- **PrimeNG v20** UI component library with theming
+- **Modern Angular 21** with SSR support
+- **PrimeNG v21** UI component library with theming
 - **TailwindCSS v4** for responsive, utility-first styling
 - **Lucide Angular** for modern icon components
 - **OAuth2/OIDC** authentication with PKCE
@@ -151,8 +151,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🛠️ Technology Stack
 
-- **Framework**: Angular 20 with SSR
-- **UI Library**: PrimeNG v20
+- **Framework**: Angular 21 with SSR
+- **UI Library**: PrimeNG v21
 - **Styling**: TailwindCSS v4
 - **Icons**: Lucide Angular
 - **Authentication**: angular-oauth2-oidc

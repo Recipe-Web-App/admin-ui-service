@@ -89,9 +89,9 @@ jobs:
             - Once approved, a maintainer will merge your PR
 
             **Angular/Frontend-specific tips:**
-            - Run \`npm run lint\` before committing
-            - Ensure \`npm test\` passes locally
-            - Run \`npm run format:check\` for code formatting
+            - Run \`bun run lint\` before committing
+            - Ensure \`bun run test\` passes locally
+            - Run \`bun run format:check\` for code formatting
             - Test both client-side and SSR rendering if applicable
             - Verify browser compatibility if UI changes are included
 
