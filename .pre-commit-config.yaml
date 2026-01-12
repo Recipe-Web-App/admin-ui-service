@@ -99,6 +99,9 @@ repos:
     hooks:
       - id: openapi-spec-validator
         files: openapi\.yaml$
+        additional_dependencies:
+          - 'jsonschema-path>=0.4.0b1'
+          - 'pathable>=0.5.0b2'
 
   # Shell script linting
   - repo: https://github.com/koalaman/shellcheck-precommit
