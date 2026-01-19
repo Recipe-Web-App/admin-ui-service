@@ -37,11 +37,15 @@
     "enabled": true,
     "labels": ["security", "dependencies"],
     "schedule": ["at any time"],
-    "prPriority": 10,
     "automerge": true
   },
 
   "packageRules": [
+    {
+      "description": "Vulnerability alerts - high priority",
+      "matchCategories": ["security"],
+      "prPriority": 10
+    },
     {
       "description": "Production dependencies - patch updates (automerge)",
       "matchDepTypes": ["dependencies"],
