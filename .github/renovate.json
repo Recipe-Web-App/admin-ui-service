@@ -26,6 +26,10 @@
     "enabled": true
   },
 
+  "pre-commit": {
+    "enabled": true
+  },
+
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["before 5am on the first day of the month"],
@@ -215,6 +219,62 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["oven/bun"],
       "versioning": "docker"
+    },
+    {
+      "description": "Pre-commit security tools - group together",
+      "matchManagers": ["pre-commit"],
+      "matchPackageNames": [
+        "https://github.com/Yelp/detect-secrets",
+        "https://github.com/gitleaks/gitleaks",
+        "https://github.com/trufflesecurity/trufflehog"
+      ],
+      "groupName": "pre-commit-security",
+      "groupSlug": "pre-commit-security",
+      "labels": ["dependencies", "pre-commit", "security"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "pre-commit"
+    },
+    {
+      "description": "Pre-commit linting tools - group together",
+      "matchManagers": ["pre-commit"],
+      "matchPackageNames": [
+        "https://github.com/pre-commit/pre-commit-hooks",
+        "https://github.com/adrienverge/yamllint",
+        "https://github.com/koalaman/shellcheck-precommit"
+      ],
+      "groupName": "pre-commit-linting",
+      "groupSlug": "pre-commit-linting",
+      "labels": ["dependencies", "pre-commit", "linting"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "pre-commit"
+    },
+    {
+      "description": "Pre-commit validation tools - group together",
+      "matchManagers": ["pre-commit"],
+      "matchPackageNames": [
+        "https://github.com/python-openapi/openapi-spec-validator",
+        "https://github.com/hadolint/hadolint"
+      ],
+      "groupName": "pre-commit-validators",
+      "groupSlug": "pre-commit-validators",
+      "labels": ["dependencies", "pre-commit"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "pre-commit"
+    },
+    {
+      "description": "Pre-commit minor/patch updates - automerge",
+      "matchManagers": ["pre-commit"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "pr",
+      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Pre-commit major updates - manual review",
+      "matchManagers": ["pre-commit"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dependencies", "pre-commit", "breaking"],
+      "automerge": false
     }
   ],
 
