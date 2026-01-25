@@ -15,7 +15,7 @@ spec:
     - Ingress
     - Egress
   ingress:
-    # Allow ingress from ingress controller
+    # Allow ingress from Kong gateway
     - from:
         - namespaceSelector:
             matchLabels:
