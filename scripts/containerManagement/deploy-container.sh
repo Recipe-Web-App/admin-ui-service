@@ -157,12 +157,6 @@ print_separator "-"
 kubectl apply -f "${CONFIG_DIR}/networkpolicy.yaml"
 
 print_separator "="
-echo -e "${CYAN}📥 Applying Gateway HTTPRoute...${NC}"
-print_separator "-"
-
-kubectl apply -f "${CONFIG_DIR}/gateway-route.yaml"
-
-print_separator "="
 echo -e "${CYAN}⏳ Waiting for Admin UI Service pod to be ready...${NC}"
 print_separator "-"
 
