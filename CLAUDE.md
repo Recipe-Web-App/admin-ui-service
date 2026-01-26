@@ -4,44 +4,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Angular 21 admin dashboard for recipe management with server-side rendering (SSR) support. Built with PrimeNG v21, TailwindCSS v4, and modern signal-based state management.
+Angular 21 admin dashboard for recipe management with server-side rendering (SSR). Built with PrimeNG v21, TailwindCSS v4, and signal-based state management. Currently in early development with scaffolded directory structure.
 
 ## Development Commands
 
-### Core Development
+```bash
+# Development
+bun run dev                    # Start dev server with HMR (localhost:4200)
+bun run build                  # Production build with SSR
+bun run serve:ssr:admin-ui-service  # Serve SSR build
 
-- `bun run dev` - Start development server with HMR
-- `bun run start` - Start development server (no HMR)
-- `bun run build` - Production build with SSR
-- `bun run serve:ssr:admin-ui-service` - Serve SSR build
+# Testing
+bun run test                   # Run unit tests with Vitest
+bun run test:watch             # Watch mode
+bunx vitest run src/app/path/to/file.spec.ts  # Single test file
+bun run test:e2e               # E2E tests with Playwright
+bun run test:coverage          # Coverage report
 
-### Testing
-
-- `bun run test` - Run unit tests with Vitest
-- `bun run test:watch` - Run unit tests in watch mode
-- `bunx vitest run src/app/path/to/file.spec.ts` - Run a single test file
-- `bun run test:e2e` - Run E2E tests with Playwright
-- `bun run test:coverage` - Run tests with coverage report
-- `bun run test:ui` - Interactive test UI
-
-### Code Quality
-
-- `bun run lint` - Run ESLint
-- `bun run lint:fix` - Fix ESLint issues
-- `bun run lint:check` - Check linting without fixing
-- `bun run format` - Format code with Prettier
-- `bun run format:check` - Check formatting without fixing
-- `bun run build:check` - Type check without build (outputs to /tmp)
-
-### Analysis
-
-- `bun run analyze` - Analyze bundle size
-
-### OpenAPI Documentation
-
-- `bun run openapi:lint` - Lint OpenAPI specification
-- `bun run openapi:validate` - Validate OpenAPI specification
-- `bun run openapi:preview` - Preview API docs locally
+# Code Quality
+bun run lint                   # ESLint
+bun run lint:fix               # Fix ESLint issues
+bun run format                 # Prettier format
+bun run build:check            # Type check only (outputs to /tmp)
+```
 
 ## Architecture
 
@@ -50,159 +35,85 @@ Angular 21 admin dashboard for recipe management with server-side rendering (SSR
 ```
 src/app/
 ├── core/                    # Singletons, guards, interceptors
-│   ├── auth/               # Authentication services and guards
-│   ├── interceptors/       # HTTP interceptors
-│   └── services/           # Global services (e.g., app-state.service.ts)
-├── shared/                 # Reusable components and utilities
-│   ├── components/         # Common UI components
-│   ├── pipes/             # Custom pipes
-│   ├── directives/        # Custom directives
-│   └── utils/             # Utility functions
-├── features/               # Feature modules (lazy-loaded)
-│   ├── dashboard/         # Main dashboard
-│   ├── recipes/           # Recipe management
-│   ├── users/             # User management
-│   ├── analytics/         # Analytics and reports
-│   └── settings/          # App settings
-├── layout/                 # App shell components
-│   ├── header/            # Top navigation
-│   ├── sidebar/           # Side navigation
-│   └── footer/            # Footer component
-├── components/             # Presentation components
-└── styles/                 # Global styles and themes
+│   └── services/            # Global services (app-state.service.ts)
+├── shared/                  # Reusable components, pipes, directives, utils
+├── features/                # Feature modules (lazy-loaded)
+├── layout/                  # App shell (header, sidebar, footer)
+├── components/              # Presentation components
+└── styles/                  # Global styles and themes
 ```
 
 ### State Management Pattern
 
-This application uses **Angular Signals** for state management, NOT traditional RxJS observables for state. The pattern is demonstrated in `src/app/core/services/app-state.service.ts`:
-
-1. **Private signals** with `signal()` for internal state
-2. **Public readonly signals** with `.asReadonly()` for external access
-3. **Computed signals** with `computed()` for derived values
-4. **Action methods** to update state
-
-Example pattern:
+Use **Angular Signals** for state management (NOT RxJS observables for state). Reference implementation: `src/app/core/services/app-state.service.ts`
 
 ```typescript
 @Injectable({ providedIn: 'root' })
 export class AppStateService {
+  // Private writable signal
   private _user = signal<User | null>(null);
 
-  // Read-only access
+  // Public readonly access
   user = this._user.asReadonly();
 
-  // Computed values
+  // Computed derived values
   isAuthenticated = computed(() => !!this.user());
 
-  // Actions
+  // Action methods to update state
   setUser = (user: User | null) => this._user.set(user);
 }
 ```
 
-### Component Architecture
+### Component Conventions
 
-- **Standalone components** - All components should be standalone
-- **OnPush change detection** - Use `ChangeDetectionStrategy.OnPush`
-- **Signal-based reactivity** - Prefer signals over observables for component state
-- **Dependency injection** - Use `inject()` function instead of constructor injection
-- **TanStack Query** - Use for server state management with signals integration
+- **Standalone components** - all components must be standalone
+- **OnPush change detection** - use `ChangeDetectionStrategy.OnPush`
+- **inject() function** - use instead of constructor injection
+- **Signals for state** - prefer signals over observables for component state
+- **TanStack Query** - use `injectQuery()` / `injectMutation()` for server state
 
-### API Integration
+### Selector Prefixes
 
-- Use **TanStack Query** (`@tanstack/angular-query-experimental`) for server state
-- HTTP services should return Observables
-- Wrap API calls with `injectQuery()` or `injectMutation()` hooks
+- Components: `app-` prefix, kebab-case (e.g., `app-recipe-list`)
+- Directives: `app` prefix, camelCase (e.g., `appHighlight`)
 
 ## Technology Stack
 
-### Core
+| Category      | Technology          |
+| ------------- | ------------------- |
+| Framework     | Angular 21 with SSR |
+| UI Components | PrimeNG 21          |
+| Styling       | TailwindCSS 4       |
+| Icons         | Lucide Angular      |
+| Server State  | TanStack Query      |
+| Local State   | Angular Signals     |
+| Validation    | Zod                 |
+| Unit Tests    | Vitest              |
+| E2E Tests     | Playwright          |
 
-- **Angular 21** with SSR
-- **TypeScript 5.9** with strict mode enabled
-- **esbuild** via @angular/build
+## SSR Considerations
 
-### UI & Styling
+Always guard browser-only APIs:
 
-- **PrimeNG 21** for UI components
-- **TailwindCSS 4** for utility-first styling
-- **Lucide Angular** for icons
-- Dark/Light mode theming support
+```typescript
+if (typeof window !== 'undefined') {
+  // Browser-only code (localStorage, window, etc.)
+}
 
-### State & Data
+if (typeof document !== 'undefined') {
+  // DOM manipulation
+}
+```
 
-- **Angular Signals** for local/global state
-- **TanStack Query** for server state
-- **RxJS** for async operations (streams, not state)
-- **Zod** for validation
+## Configuration Notes
 
-### Testing
+- **TypeScript**: Strict mode enabled, target ES2022
+- **Bundle limits**: Initial < 500KB warning, < 1MB error
+- **Component styles**: < 4KB warning, < 8KB error
+- **Dark mode**: Uses `data-theme="dark"` attribute on document root
 
-- **Vitest** for unit tests
-- **Playwright** for E2E tests
+## Git Commits
 
-## Code Conventions
+Use Conventional Commits format: `type(scope): description`
 
-### TypeScript
-
-- **Strict mode** enabled - all TypeScript strict options are on
-- Use `inject()` for dependency injection
-- Prefer `const` arrow functions for class methods
-- Component selectors use `app-` prefix with kebab-case
-- Directive selectors use `app` prefix with camelCase
-
-### Styling
-
-- **Tailwind utility classes** for most styling
-- **PrimeNG CSS variables** for theme customization
-- Dark mode uses `data-theme="dark"` attribute
-- Component styles should be minimal, prefer Tailwind
-
-### Git Commits
-
-- Use **Conventional Commits** format: `type(scope): description`
-- Valid types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
-- Commits checked by commitlint
-
-## Important Configuration Details
-
-### Build Configuration
-
-- **Bundle size limits**: Initial bundle < 500KB (warning), < 1MB (error)
-- **Component styles**: < 4KB (warning), < 8KB (error)
-- **SSR enabled** with hydration and event replay
-- Build output configured for server-side rendering
-
-### TypeScript Configuration
-
-- All strict options enabled in `tsconfig.json`
-- `experimentalDecorators: true` for Angular
-- `strictTemplates: true` in Angular compiler options
-- Target: ES2022
-
-### Testing Notes
-
-- Vitest is the primary unit test runner (configured in `vitest.config.ts`)
-- Test files follow `*.spec.ts` pattern in `src/` directory
-- E2E tests use Playwright
-
-### SSR Considerations
-
-- Always check for browser environment: `typeof window !== 'undefined'`
-- Use platform checks: `typeof document !== 'undefined'`
-- Theme initialization checks for localStorage availability
-- Server entry point: `src/server.ts`
-
-## Pre-commit Hooks
-
-This project uses pre-commit hooks (`.pre-commit-config.yaml`):
-
-- Security scanning (detect-secrets, gitleaks, trufflehog)
-- Code quality checks (ESLint, Prettier, Stylelint)
-- Markdown linting
-- License checking
-- Install with: `pre-commit install`
-
-## Runtime Requirements
-
-- Node.js >= 20.0.0
-- Bun >= 1.1.0
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
