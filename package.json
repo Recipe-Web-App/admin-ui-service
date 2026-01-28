@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/Recipe-Web-App/admin-ui-service",
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=20.20.0",
     "bun": ">=1.1.0"
   },
   "scripts": {
