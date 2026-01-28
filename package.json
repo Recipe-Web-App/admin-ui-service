@@ -86,7 +86,7 @@
     "zone.js": "~0.16.0"
   },
   "devDependencies": {
-    "@redocly/cli": "^1.25.0",
+    "@redocly/cli": "^2.15.0",
     "@analogjs/vite-plugin-angular": "^2.2.0",
     "@analogjs/vitest-angular": "^2.2.0",
     "@angular/build": "^21.1.1",
