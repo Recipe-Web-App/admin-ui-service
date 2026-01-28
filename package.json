@@ -107,7 +107,7 @@
     "autoprefixer": "^10.4.23",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-prettier": "^5.5.5",
     "jsdom": "^27.4.0",
     "license-checker": "^25.0.1",
     "madge": "^8.0.0",
