@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.7-labs
+# syntax=docker/dockerfile:1.21-labs
 # ==============================================================================
 # Multi-stage Dockerfile for Angular 20 Admin UI Service with SSR
 # ==============================================================================
