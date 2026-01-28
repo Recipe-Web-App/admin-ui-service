@@ -125,7 +125,7 @@ repos:
 
   # Enhanced secret detection
   - repo: https://github.com/trufflesecurity/trufflehog
-    rev: v3.92.4
+    rev: v3.92.5
     hooks:
       - id: trufflehog
         name: TruffleHog Secret Detection
