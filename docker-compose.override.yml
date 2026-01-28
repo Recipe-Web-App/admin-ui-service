@@ -116,7 +116,7 @@ services:
 
   # Redis for Session/Caching (if needed)
   redis-dev:
-    image: redis:7.4.1-alpine
+    image: redis:7.4.7-alpine
     container_name: recipe-redis-dev
     ports:
       - '6379:6379'
