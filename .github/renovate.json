@@ -21,29 +21,24 @@
   "rangeStrategy": "bump",
   "rebaseWhen": "auto",
   "platformAutomerge": true,
-
   "bun": {
     "enabled": true
   },
-
   "pre-commit": {
     "enabled": true
   },
-
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["before 5am on the first day of the month"],
     "commitMessageAction": "Update",
     "commitMessageExtra": "lockfile maintenance"
   },
-
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": ["security", "dependencies"],
     "schedule": ["at any time"],
     "automerge": true
   },
-
   "packageRules": [
     {
       "description": "Vulnerability alerts - high priority",
@@ -107,78 +102,88 @@
     },
     {
       "description": "Angular ecosystem - group together",
-      "matchPackagePatterns": ["^@angular/"],
       "groupName": "angular",
       "groupSlug": "angular",
-      "labels": ["dependencies", "javascript", "angular"]
+      "labels": ["dependencies", "javascript", "angular"],
+      "matchPackageNames": ["/^@angular//"]
     },
     {
       "description": "Angular packages - disable major updates (require manual upgrade)",
-      "matchPackagePatterns": ["^@angular/"],
       "matchUpdateTypes": ["major"],
-      "enabled": false
+      "enabled": false,
+      "matchPackageNames": ["/^@angular//"]
     },
     {
       "description": "AnalogJS packages - group together",
-      "matchPackagePatterns": ["^@analogjs/"],
       "groupName": "analogjs",
       "groupSlug": "analogjs",
-      "labels": ["dependencies", "javascript", "angular"]
+      "labels": ["dependencies", "javascript", "angular"],
+      "matchPackageNames": ["/^@analogjs//"]
     },
     {
       "description": "PrimeNG ecosystem - group together",
-      "matchPackagePatterns": ["^primeng$", "^primeicons$", "^@primeng/"],
       "groupName": "primeng",
       "groupSlug": "primeng",
-      "labels": ["dependencies", "javascript", "ui"]
+      "labels": ["dependencies", "javascript", "ui"],
+      "matchPackageNames": ["/^primeng$/", "/^primeicons$/", "/^@primeng//"]
     },
     {
       "description": "TanStack packages - group together",
-      "matchPackagePatterns": ["^@tanstack/"],
       "groupName": "tanstack",
       "groupSlug": "tanstack",
-      "labels": ["dependencies", "javascript"]
+      "labels": ["dependencies", "javascript"],
+      "matchPackageNames": ["/^@tanstack//"]
     },
     {
       "description": "Testing tools - group together",
-      "matchPackagePatterns": [
-        "^@playwright/",
-        "^playwright$",
-        "^@vitest/",
-        "^vitest$",
-        "^jasmine",
-        "^@types/jasmine$"
-      ],
       "groupName": "testing",
       "groupSlug": "testing",
-      "labels": ["dependencies", "javascript", "testing"]
+      "labels": ["dependencies", "javascript", "testing"],
+      "matchPackageNames": [
+        "/^@playwright//",
+        "/^playwright$/",
+        "/^@vitest//",
+        "/^vitest$/",
+        "/^jasmine/",
+        "/^@types/jasmine$/"
+      ]
     },
     {
       "description": "Vitest - disable major updates (Angular compatibility)",
-      "matchPackagePatterns": ["^vitest$", "^@vitest/"],
       "matchUpdateTypes": ["major"],
-      "enabled": false
+      "enabled": false,
+      "matchPackageNames": ["/^vitest$/", "/^@vitest//"]
     },
     {
       "description": "ESLint ecosystem - group together",
-      "matchPackagePatterns": ["^eslint", "^@eslint/", "^@typescript-eslint/", "^angular-eslint$"],
       "groupName": "eslint",
       "groupSlug": "eslint",
-      "labels": ["dependencies", "javascript", "linting"]
+      "labels": ["dependencies", "javascript", "linting"],
+      "matchPackageNames": [
+        "/^eslint/",
+        "/^@eslint//",
+        "/^@typescript-eslint//",
+        "/^angular-eslint$/"
+      ]
     },
     {
       "description": "Build tools - group together",
-      "matchPackagePatterns": ["^@tailwindcss/", "^tailwindcss$", "^postcss$", "^autoprefixer$"],
       "groupName": "build-tools",
       "groupSlug": "build-tools",
-      "labels": ["dependencies", "javascript", "build"]
+      "labels": ["dependencies", "javascript", "build"],
+      "matchPackageNames": [
+        "/^@tailwindcss//",
+        "/^tailwindcss$/",
+        "/^postcss$/",
+        "/^autoprefixer$/"
+      ]
     },
     {
       "description": "TypeScript and types - group together",
-      "matchPackagePatterns": ["^typescript$", "^typescript-eslint$"],
       "groupName": "typescript",
       "groupSlug": "typescript",
-      "labels": ["dependencies", "javascript"]
+      "labels": ["dependencies", "javascript"],
+      "matchPackageNames": ["/^typescript$/", "/^typescript-eslint$/"]
     },
     {
       "description": "Node types - disable major updates",
@@ -277,13 +282,14 @@
       "automerge": false
     }
   ],
-
   "customManagers": [
     {
       "customType": "regex",
       "description": "Update Bun version in GitHub Actions",
-      "fileMatch": ["^\\.github/workflows/.*\\.ya?ml$"],
-      "matchStrings": ["BUN_VERSION:\\s*['\"]?(?<currentValue>[^'\"\\s]+)['\"]?"],
+      "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
+      "matchStrings": [
+        "BUN_VERSION:\\s*['\"]?(?<currentValue>[^'\"\\s]+)['\"]?"
+      ],
       "depNameTemplate": "oven-sh/bun",
       "datasourceTemplate": "github-releases"
     }
