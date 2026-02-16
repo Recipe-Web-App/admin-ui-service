@@ -92,7 +92,7 @@ services:
   # Development Database (if needed)
   # ------------------------------------------------------------------------------
   postgres-dev:
-    image: postgres:18.1-alpine
+    image: postgres:18.2-alpine
     container_name: recipe-postgres-dev
     environment:
       - POSTGRES_DB=recipe_admin_dev
